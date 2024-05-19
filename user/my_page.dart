@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'my_model.dart';
 import 'dart:convert';
-import 'dart:typed_data';
 import '../header_footer_drawer/drawer.dart';
 
 class MyPage extends StatelessWidget {
@@ -25,10 +24,17 @@ class MyPage extends StatelessWidget {
               ),
             ),
           ],
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.lightGreen,
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
           centerTitle: true,
           elevation: 0.0,
-          title: const Text('My Page'),
+          title: const Text('My Page',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
         ),
         drawer: const UserDrawer(),
         body: Center(
@@ -81,8 +87,8 @@ class MyPage extends StatelessWidget {
                   child: CircleAvatar(
                     backgroundColor: Colors.grey,
                     radius: 50,
-                    backgroundImage: model.imgURL != '' ? Image.memory(
-                      base64Decode(model.imgURL),
+                    backgroundImage: imgURL != '' ? Image.memory(
+                      base64Decode(imgURL),
                       fit: BoxFit.cover,
                       errorBuilder: (c, o, s) {
                         return const Icon(
@@ -91,7 +97,7 @@ class MyPage extends StatelessWidget {
                         );
                       },
                     ).image
-                    : AssetImage('assets/images/default.png'),
+                    : const AssetImage('assets/images/default.png'),
                   ),
                 ),
                 Container(

@@ -2,26 +2,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:typed_data';
-import 'package:http_parser/http_parser.dart'; // http_parser パッケージをインポート
-import 'dart:convert';
-import 'dart:ui' as ui;
-import 'dart:io';
 
 
 class RegisterModel extends ChangeNotifier {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final passwordConfirmController = TextEditingController();
   final nameController = TextEditingController();
   final groupController = TextEditingController();
   final gradeController = TextEditingController();
 
   String? email;
   String? password;
+  String? passConfirm;
   String? name;
   String? group;
   String? grade;
@@ -50,6 +47,11 @@ class RegisterModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setPassConfirm(String passConfirm) {
+    this.passConfirm = passConfirm;
+    notifyListeners();
+  }
+
   void setName(String name) {
     this.name = name;
     notifyListeners();
@@ -74,14 +76,31 @@ class RegisterModel extends ChangeNotifier {
   Future signUp(Uint8List? userImage) async {
     email = emailController.text;
     password = passwordController.text;
+    passConfirm = passwordConfirmController.text;
     name = nameController.text;
     group = groupController.text;
     grade = gradeController.text;
     String status = '未出席';
 
+    if (name == null || name == '') {
+      throw '名前が入力されていません。';
+    }
+
+    if (email == null || email == '') {
+      throw 'メールアドレスが入力されていません。';
+    }
+
+    if (password != passConfirm) {
+      throw '入力したパスワードと確認のパスワードが異なります。';
+    }
+    if (group == null || group == '') {
+      throw '班が選択されていません。';
+    }
+
     if(grade == null || grade == ''){
       grade = 'B4';
     }
+
 
     if (email != null && password != null ) {
       //firebase authでユーザー作成
@@ -135,5 +154,6 @@ class RegisterModel extends ChangeNotifier {
 
       }
     }
+    notifyListeners();
   }
 }

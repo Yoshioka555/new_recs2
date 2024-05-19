@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../user/email_reset_page.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/link.dart';
 
@@ -89,7 +90,7 @@ class UserDrawer extends StatelessWidget {
                           ));
 
                     } catch (e) {
-//失敗した場合
+                      //失敗した場合
                       final snackBar = SnackBar(
                         backgroundColor: Colors.red,
                         content: Text(e.toString()),
@@ -107,11 +108,18 @@ class UserDrawer extends StatelessWidget {
                 title: TextButton.icon(
                   onPressed: () async {
                     //メールアドレスとパスワード変更ページに遷移
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) {
+                            return const EmailResetPage();
+                          }
+                      ),
+                    );
                   },
                   icon: const Icon(
                     Icons.email_rounded,
                   ),
-                  label: const Text('Email＆Password変更'),
+                  label: const Text('Email変更'),
                 ),
               ),
               const Divider(

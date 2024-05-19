@@ -16,6 +16,8 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
 
+  bool _isObscure = true;
+
   String _group = '';
   //エラーを表示
   String? error;
@@ -49,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           backgroundColor: Colors.black,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+            icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -81,7 +83,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: CircleAvatar(
                             backgroundColor: Colors.grey,
                             radius: 50,
-                            backgroundImage: imageData != null ? Image.memory(imageData!).image : AssetImage('assets/images/default.png'),
+                            backgroundImage: imageData != null ? Image.memory(imageData!).image : const AssetImage('assets/images/default.png'),
                           ),
                         ),
                       ),
@@ -104,6 +106,27 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         onChanged: (text) {
                           model.setPassword(text);
+                        },
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      TextFormField(
+                        controller: model.passwordConfirmController,
+                        obscureText: _isObscure,
+                        decoration: InputDecoration(
+                            labelText: 'Password',
+                            suffixIcon: IconButton(
+                              icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              },
+                            )
+                        ),
+                        onChanged: (text) {
+                          model.setPassConfirm(text);
                         },
                       ),
                       const SizedBox(
@@ -245,6 +268,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ElevatedButton(
                         onPressed: () async {
                           model.startLoading();
+
                           try {
                             await model.signUp(imageData);
                             //ユーザー登録
@@ -272,6 +296,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             final snackBar = SnackBar(
                               backgroundColor: Colors.red,
                               content: Text(error.toString()),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          } catch (e) {
+                            final snackBar = SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text(e.toString()),
                             );
                             ScaffoldMessenger.of(context).showSnackBar(snackBar);
                           } finally {
