@@ -21,8 +21,8 @@ class _FooterState extends State<Footer> {
     Icons.calendar_month,
     Icons.groups,
     Icons.chat,
-    Icons.account_circle,
     Icons.edit_note,
+    Icons.account_circle,
   ];
 
   //アイコン文字列
@@ -30,16 +30,25 @@ class _FooterState extends State<Footer> {
     'イベント',
     '出席管理',
     'チャット',
-    'マイページ',
     '議事録',
+    'マイページ',
+  ];
+
+  //アイコンや文字列のカラー
+  final List<Color?> _footerItemColor = [
+    Colors.purple[200],
+    Colors.pinkAccent,
+    Colors.orange,
+    Colors.blue,
+    Colors.lightGreen,
   ];
 
   final _routes = [
-    const EventIndexPage(),
-    const EventIndexPage(),
-    const EventIndexPage(),
+    EventIndexPage(),
+    EventIndexPage(),
+    EventIndexPage(),
+    EventIndexPage(),
     const MyPage(),
-    const EventIndexPage(),
   ];
 
   @override
@@ -61,9 +70,10 @@ class _FooterState extends State<Footer> {
     return BottomNavigationBarItem(
       icon: Icon(
         _footerIcons[index],
-        color: Colors.black87,
+        color: _footerItemColor[index],
       ),
       label: _footerItemNames[index],
+
     );
   }
 
@@ -88,15 +98,15 @@ class _FooterState extends State<Footer> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: Scaffold(
-
         body: _routes.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,  //これを書かないと３つまでしか表示されない
           items: _bottomNavigationBarItems,
           currentIndex: _selectedIndex,
+          selectedItemColor: Colors.black,
           onTap: _onItemTapped,
         ),
       ),
