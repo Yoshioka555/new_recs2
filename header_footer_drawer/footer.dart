@@ -108,6 +108,7 @@ class _FooterState extends State<Footer> {
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.black,
           onTap: _onItemTapped,
+          backgroundColor: Colors.white,
         ),
       ),
     );

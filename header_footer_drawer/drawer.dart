@@ -19,6 +19,7 @@ class UserDrawer extends StatelessWidget {
     return ChangeNotifierProvider<DrawerModel>(
       create: (_) => DrawerModel()..fetchUserList(),
       child: Drawer(
+        backgroundColor: Colors.white,
         child: Consumer<DrawerModel>(builder: (context, model, child) {
           return ListView(
             children: [

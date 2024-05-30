@@ -20,6 +20,7 @@ class LoginPage extends StatelessWidget {
       child: WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
+          backgroundColor: Colors.white,
           appBar: AppBar(
             title: const Text(
                 'Labmaid(ログイン)',

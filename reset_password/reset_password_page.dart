@@ -17,6 +17,13 @@ class ResetPasswordPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('パスワードリセット'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            color: Colors.white,
+          ),
         ),
         body: Center(
           child: Consumer<ResetPasswordModel>(builder: (context, model, child) {

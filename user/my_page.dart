@@ -12,6 +12,7 @@ class MyPage extends StatelessWidget {
     return ChangeNotifierProvider<MyModel>(
       create: (_) => MyModel()..fetchMyModel(),
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           actions: [
             Padding(

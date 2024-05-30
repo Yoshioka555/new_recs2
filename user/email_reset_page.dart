@@ -20,12 +20,20 @@ class _EmailResetPageState extends State<EmailResetPage> {
     return ChangeNotifierProvider<EmailResetModel>(
       create: (_) => EmailResetModel()..fetchEmailReset(),
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.black,
           title: const Text('Email変更',
             style: TextStyle(
               color: Colors.white,
             ),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            color: Colors.white,
           ),
         ),
         body: Center(

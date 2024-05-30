@@ -42,6 +42,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return ChangeNotifierProvider<RegisterModel>(
       create: (_) => RegisterModel(),
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text(
             '新規登録',

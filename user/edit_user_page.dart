@@ -39,12 +39,20 @@ class _EditMyPageState extends State<EditMyPage> {
     return ChangeNotifierProvider<EditMyPageModel>(
       create: (_) => EditMyPageModel()..fetchUser(),
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.black,
           title: const Text('ユーザー情報変更',
             style: TextStyle(
               color: Colors.white,
             ),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            color: Colors.white,
           ),
         ),
         body: Center(
