@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:intl/intl.dart';
 import 'package:labmaidfastapi/domain/event_data.dart';
+import 'package:labmaidfastapi/event/event_create_page.dart';
+import 'package:labmaidfastapi/event/event_update_page.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:provider/provider.dart';
 import '../header_footer_drawer/drawer.dart';
@@ -18,6 +21,8 @@ class EventIndexPage extends StatefulWidget {
 
 class _EventIndexPageState extends State<EventIndexPage> {
   final CalendarController _controller = CalendarController();
+  final CalendarController _controllerWeek = CalendarController();
+  final CalendarController _controllerDay = CalendarController();
   late CalendarHeaderStyle _headerStyle;
   bool _isDisposed = false;
   int selectedMonth = DateTime.now().month;
@@ -173,7 +178,7 @@ class _EventIndexPageState extends State<EventIndexPage> {
   }
 
   void _goToToday() {
-    _controller.displayDate = DateTime(today.year, today.month, 1, 0,0,0,0,0);
+    _controller.displayDate = DateTime(today.year, today.month, today.day, 0,0,0,0,0);
   }
 
   void _goToSelectedYearMonth(int year, int month) {
@@ -183,6 +188,8 @@ class _EventIndexPageState extends State<EventIndexPage> {
   @override
   void initState() {
     _controller.displayDate = DateTime(today.year, today.month, 1, 0,0,0,0,0);
+    _controllerWeek.displayDate = DateTime(today.year, today.month, today.day, 0, 0, 0, 0);
+    _controllerDay.displayDate = DateTime(today.year, today.month, today.day,0,0,0,0);
     _headerStyle = headerStyle(DateTime.now());
     super.initState();
   }
@@ -206,291 +213,737 @@ class _EventIndexPageState extends State<EventIndexPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<EventIndexModel>(
-        create: (_) => EventIndexModel()..fetchEvent(),
-        child:  Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            actions: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: IconButton(
-                  icon: const Icon(Icons.timer),
-                  onPressed: () async {
+    return DefaultTabController(
+      length: 3,
+      child: ChangeNotifierProvider<EventIndexModel>(
+          create: (_) => EventIndexModel()..fetchEvent(),
+          child:  Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(
+                    icon: const Icon(Icons.timer),
+                    onPressed: () async {
 
-                  }
+                    }
+                  ),
                 ),
-              ),
-            ],
-            backgroundColor: Colors.purple[200],
-            iconTheme: const IconThemeData(
-              color: Colors.white,
-            ),
-            centerTitle: true,
-            elevation: 0.0,
-            title: const Text('イベントページ',
-              style: TextStyle(
+              ],
+              backgroundColor: Colors.purple[200],
+              iconTheme: const IconThemeData(
                 color: Colors.white,
               ),
+              centerTitle: true,
+              elevation: 0.0,
+              title: const Text('イベントページ',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              bottom: const TabBar(
+                tabs: <Tab>[
+                  Tab(text: 'Month',),
+                  Tab(text: 'Week',),
+                  Tab(text: 'Day',),
+                ],
+              ),
+            ),
+            drawer: const UserDrawer(),
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.amber
+              ,
+              onPressed: () async {
+                //画面遷移
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateEventPage(),
+                    fullscreenDialog: true,
+                  ),
+                );
+              },
+              child: const Icon(
+                Icons.add,
+                color: Colors.black,
+              ),
+            ),
+
+            body: TabBarView(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: SizedBox(
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      _goToToday();
+                                    },
+                                    child: const Text('今日'),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: DropdownButton(
+                                      value: selectedYear,
+                                      items: const [
+                                        DropdownMenuItem(
+                                          value: 2020,
+                                          child: Text('2020年'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 2021,
+                                          child: Text('2021年'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 2022,
+                                          child: Text('2022年'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 2023,
+                                          child: Text('2023年'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 2024,
+                                          child: Text('2024年'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 2025,
+                                          child: Text('2025年'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 2026,
+                                          child: Text('2026年'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 2027,
+                                          child: Text('2027年'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 2028,
+                                          child: Text('2028年'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 2029,
+                                          child: Text('2029年'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 2030,
+                                          child: Text('2030年'),
+                                        ),
+                                      ],
+                                      onChanged: (text) {
+                                        setState(() {
+                                          selectedYear = text!;
+                                        });
+                                      }
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: DropdownButton(
+                                      value: selectedMonth,
+                                      items: const [
+                                        DropdownMenuItem(
+                                          value: 1,
+                                          child: Text('1月'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 2,
+                                          child: Text('2月'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 3,
+                                          child: Text('3月'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 4,
+                                          child: Text('4月'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 5,
+                                          child: Text('5月'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 6,
+                                          child: Text('6月'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 7,
+                                          child: Text('7月'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 8,
+                                          child: Text('8月'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 9,
+                                          child: Text('9月'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 10,
+                                          child: Text('10月'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 11,
+                                          child: Text('11月'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 12,
+                                          child: Text('12月'),
+                                        ),
+                                      ],
+                                      onChanged: (text) {
+                                        setState(() {
+                                          selectedMonth = text!;
+                                        });
+                                      }
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      _goToSelectedYearMonth(selectedYear, selectedMonth);
+                                    },
+                                    child: const Text('移動'),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Consumer<EventIndexModel>(builder: (context, model, child) {
+                        return SizedBox(
+                          height: 1800,
+                          child: SfCalendar(
+                            onLongPress: (CalendarLongPressDetails details) {
+
+                            },
+                            onTap: (CalendarTapDetails details) {
+
+                            },
+                            dataSource: EventDataSource(model.events),
+                            view: CalendarView.month,
+                            controller: _controller,
+                            cellEndPadding: 0,
+                            headerDateFormat: 'yyyy年MM月',
+                            showNavigationArrow: true,
+                            onViewChanged: viewChanged,
+                            headerStyle: _headerStyle,
+                            viewHeaderStyle: ViewHeaderStyle(
+                              backgroundColor: _headerStyle.backgroundColor,
+                              dayTextStyle: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                            todayHighlightColor: Colors.white,
+                            appointmentBuilder: (BuildContext context,
+                                CalendarAppointmentDetails details) {
+                              final EventData appointment = details.appointments.first;
+                              return GestureDetector(
+                                onTap: () async {
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          UpdateEventPage(event: appointment,userId: model.id!, content: titleToContent(appointment.title),),
+                                      fullscreenDialog: true,
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: _isTitleToColorBox(appointment.title, appointment.unit),
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                      color: _isTitleToColorBorder(appointment.title, appointment.unit),
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 2.0),
+                                    child: Text(displayTitle(appointment.title, appointment.unit, appointment.start),
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            monthCellBuilder: (BuildContext context, MonthCellDetails details) {
+                              return Container(
+                                alignment: Alignment.topCenter,
+                                decoration: BoxDecoration(
+                                    color: _getCellColor(details.date),
+                                    border: Border.all(color: Colors.grey, width: 0.2)
+                                ),
+                                child: DateTime(details.date.year, details.date.month, details.date.day) == DateTime(today.year, today.month, today.day)
+                                    ? Container(
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.indigo,
+                                      ),
+                                      height: 25,
+                                      width: 25,
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        details.date.day.toString(),
+                                        style: const TextStyle(color: Colors.white),
+                                      ),
+                                      )
+                                    : Text(
+                                        details.date.day.toString(),
+                                        style: TextStyle(color: _getTextColor(details.date)),
+                                      ),
+                              );
+                            },
+                            monthViewSettings: const MonthViewSettings(
+                              numberOfWeeksInView: 6, // 表示する週の数
+                              agendaItemHeight: 40,
+                              appointmentDisplayCount: 7,
+                              showAgenda: true,
+                              appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
+                              monthCellStyle: MonthCellStyle(
+                                backgroundColor: Colors.white,
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Consumer<EventIndexModel>(builder: (context, model, child) {
+                        return SizedBox(
+                          height: 1100,
+                          child: SfCalendar(
+                              dataSource: EventDataSource(model.events),
+                              view: CalendarView.week,
+                              controller: _controllerWeek,
+                              cellEndPadding: 0,
+                              headerDateFormat: 'yyyy年　MM月',
+                              showNavigationArrow: true,
+                              onViewChanged: viewChanged,
+                              headerStyle: _headerStyle,
+                              viewHeaderStyle: ViewHeaderStyle(
+                                backgroundColor: _headerStyle.backgroundColor,
+                                dayTextStyle: const TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              todayHighlightColor: Colors.indigo,
+                              appointmentBuilder: (BuildContext context,
+                                  CalendarAppointmentDetails details) {
+                                    final EventData appointment = details.appointments.first;
+                                    final bool isTimeslotAppointment = _isTimeslotAppointmentView(
+                                      appointment, _controllerWeek.view);
+                                    final bool isStartAppointment = !isTimeslotAppointment &&
+                                      _isStartOfAppointmentView(appointment, details.date);
+                                    final bool isEndAppointment = !isTimeslotAppointment &&
+                                      _isEndOfAppointmentView(
+                                        appointment, details.date, _controllerWeek.view);
+                                    return Container(
+                                      margin: EdgeInsets.fromLTRB(isStartAppointment ? 0 : 0, 0,
+                                      isEndAppointment ? 0 : 0, 0),
+                                      decoration: BoxDecoration(
+                                        color: _isTitleToColorBox(appointment.title, appointment.unit),
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: Border.all(
+                                          color: _isTitleToColorBorder(appointment.title, appointment.unit),
+                                          width: 1.0,
+                                        ),
+                                      ),
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 2.0),
+                                        child: Text(displayTitle(appointment.title, appointment.unit, appointment.start),
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                            },
+
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Consumer<EventIndexModel>(builder: (context, model, child) {
+                        return SizedBox(
+                          height: 1100,
+                          child: SfCalendar(
+                            dataSource: EventDataSource(model.events),
+                            view: CalendarView.day,
+                            controller: _controllerDay,
+                            cellEndPadding: 0,
+                            headerDateFormat: 'yyyy年　MM月',
+                            showNavigationArrow: true,
+                            onViewChanged: viewChanged,
+                            headerStyle: _headerStyle,
+                            viewHeaderStyle: ViewHeaderStyle(
+                              backgroundColor: _headerStyle.backgroundColor,
+                              dayTextStyle: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                            todayHighlightColor: Colors.indigo,
+                            appointmentBuilder: (BuildContext context,
+                                CalendarAppointmentDetails details) {
+                              final EventData appointment = details.appointments.first;
+                              final bool isTimeslotAppointment = _isTimeslotAppointmentView(
+                                  appointment, _controllerDay.view);
+                              final bool isStartAppointment = !isTimeslotAppointment &&
+                                  _isStartOfAppointmentView(appointment, details.date);
+                              final bool isEndAppointment = !isTimeslotAppointment &&
+                                  _isEndOfAppointmentView(
+                                      appointment, details.date, _controllerDay.view);
+                              return Container(
+                                margin: EdgeInsets.fromLTRB(isStartAppointment ? 0 : 0, 0,
+                                    isEndAppointment ? 0 : 0, 0),
+                                decoration: BoxDecoration(
+                                  color: _isTitleToColorBox(appointment.title, appointment.unit),
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(
+                                    color: _isTitleToColorBorder(appointment.title, appointment.unit),
+                                    width: 1.0,
+                                  ),
+                                ),
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 2.0),
+                                  child: Text(displayTitle(appointment.title, appointment.unit, appointment.start),
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-          drawer: const UserDrawer(),
-          body: SingleChildScrollView(
-              child: Column(
+      ),
+    );
+  }
+  
+  String titleToContent(String title) {
+    if (title == 'ミーティング' || title == '輪講') {
+      return title;
+    } else {
+      return 'その他';
+    }
+  }
+
+  Widget calendarChange (CalendarView view) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: SizedBox(
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                _goToToday();
-                              },
-                              child: const Text('今日'),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: DropdownButton(
-                                value: selectedYear,
-                                items: const [
-                                  DropdownMenuItem(
-                                    value: 2020,
-                                    child: Text('2020年'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 2021,
-                                    child: Text('2021年'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 2022,
-                                    child: Text('2022年'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 2023,
-                                    child: Text('2023年'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 2024,
-                                    child: Text('2024年'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 2025,
-                                    child: Text('2025年'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 2026,
-                                    child: Text('2026年'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 2027,
-                                    child: Text('2027年'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 2028,
-                                    child: Text('2028年'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 2029,
-                                    child: Text('2029年'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 2030,
-                                    child: Text('2030年'),
-                                  ),
-                                ],
-                                onChanged: (text) {
-                                  setState(() {
-                                    selectedYear = text!;
-                                  });
-                                }
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: DropdownButton(
-                                value: selectedMonth,
-                                items: const [
-                                  DropdownMenuItem(
-                                    value: 1,
-                                    child: Text('1月'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 2,
-                                    child: Text('2月'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 3,
-                                    child: Text('3月'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 4,
-                                    child: Text('4月'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 5,
-                                    child: Text('5月'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 6,
-                                    child: Text('6月'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 7,
-                                    child: Text('7月'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 8,
-                                    child: Text('8月'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 9,
-                                    child: Text('9月'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 10,
-                                    child: Text('10月'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 11,
-                                    child: Text('11月'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: 12,
-                                    child: Text('12月'),
-                                  ),
-                                ],
-                                onChanged: (text) {
-                                  setState(() {
-                                    selectedMonth = text!;
-                                  });
-                                }
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                _goToSelectedYearMonth(selectedYear, selectedMonth);
-                              },
-                              child: const Text('移動'),
-                            ),
-                          ),
-                        ),
-                      ],
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _goToToday();
+                        },
+                        child: const Text('今日'),
+                      ),
                     ),
                   ),
-                  SizedBox(
-                    height: 1000,
-                    child: Consumer<EventIndexModel>(builder: (context, model, child) {
-                      return SfCalendar(
-                        dataSource: EventDataSource(model.events),
-                        view: CalendarView.month,
-                        controller: _controller,
-                        cellEndPadding: 0,
-                        headerDateFormat: 'yyyy年　MM月',
-                        showNavigationArrow: true,
-                        onViewChanged: viewChanged,
-                        headerStyle: _headerStyle,
-                        viewHeaderStyle: ViewHeaderStyle(
-                          backgroundColor: _headerStyle.backgroundColor,
-                          dayTextStyle: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                          ),
-                        ),
-                        todayHighlightColor: Colors.white,
-                        /*allowedViews: const <CalendarView>[
-                                CalendarView.day,
-                                CalendarView.week,
-                                CalendarView.month,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: DropdownButton(
+                          value: selectedYear,
+                          items: const [
+                            DropdownMenuItem(
+                              value: 2020,
+                              child: Text('2020年'),
+                            ),
+                            DropdownMenuItem(
+                              value: 2021,
+                              child: Text('2021年'),
+                            ),
+                            DropdownMenuItem(
+                              value: 2022,
+                              child: Text('2022年'),
+                            ),
+                            DropdownMenuItem(
+                              value: 2023,
+                              child: Text('2023年'),
+                            ),
+                            DropdownMenuItem(
+                              value: 2024,
+                              child: Text('2024年'),
+                            ),
+                            DropdownMenuItem(
+                              value: 2025,
+                              child: Text('2025年'),
+                            ),
+                            DropdownMenuItem(
+                              value: 2026,
+                              child: Text('2026年'),
+                            ),
+                            DropdownMenuItem(
+                              value: 2027,
+                              child: Text('2027年'),
+                            ),
+                            DropdownMenuItem(
+                              value: 2028,
+                              child: Text('2028年'),
+                            ),
+                            DropdownMenuItem(
+                              value: 2029,
+                              child: Text('2029年'),
+                            ),
+                            DropdownMenuItem(
+                              value: 2030,
+                              child: Text('2030年'),
+                            ),
                           ],
-
-                               */
-                        appointmentBuilder: (BuildContext context,
-                            CalendarAppointmentDetails details) {
-                          final EventData appointment = details.appointments.first;
-                          final bool isTimeslotAppointment = _isTimeslotAppointmentView(
-                              appointment, _controller.view);
-                          final bool isStartAppointment = !isTimeslotAppointment &&
-                              _isStartOfAppointmentView(appointment, details.date);
-                          final bool isEndAppointment = !isTimeslotAppointment &&
-                              _isEndOfAppointmentView(
-                                  appointment, details.date, _controller.view);
-                          return Container(
-                            margin: EdgeInsets.fromLTRB(isStartAppointment ? 0 : 0, 0,
-                                isEndAppointment ? 0 : 0, 0),
-                            decoration: BoxDecoration(
-                              color: _isTitleToColorBox(appointment.title, appointment.unit),
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: _isTitleToColorBorder(appointment.title, appointment.unit),
-                                width: 1.0,
-                              ),
+                          onChanged: (text) {
+                            setState(() {
+                              selectedYear = text!;
+                            });
+                          }
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: DropdownButton(
+                          value: selectedMonth,
+                          items: const [
+                            DropdownMenuItem(
+                              value: 1,
+                              child: Text('1月'),
                             ),
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 2.0),
-                              child: Text(appointment.title,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                  ),
-                              ),
+                            DropdownMenuItem(
+                              value: 2,
+                              child: Text('2月'),
                             ),
-                          );
+                            DropdownMenuItem(
+                              value: 3,
+                              child: Text('3月'),
+                            ),
+                            DropdownMenuItem(
+                              value: 4,
+                              child: Text('4月'),
+                            ),
+                            DropdownMenuItem(
+                              value: 5,
+                              child: Text('5月'),
+                            ),
+                            DropdownMenuItem(
+                              value: 6,
+                              child: Text('6月'),
+                            ),
+                            DropdownMenuItem(
+                              value: 7,
+                              child: Text('7月'),
+                            ),
+                            DropdownMenuItem(
+                              value: 8,
+                              child: Text('8月'),
+                            ),
+                            DropdownMenuItem(
+                              value: 9,
+                              child: Text('9月'),
+                            ),
+                            DropdownMenuItem(
+                              value: 10,
+                              child: Text('10月'),
+                            ),
+                            DropdownMenuItem(
+                              value: 11,
+                              child: Text('11月'),
+                            ),
+                            DropdownMenuItem(
+                              value: 12,
+                              child: Text('12月'),
+                            ),
+                          ],
+                          onChanged: (text) {
+                            setState(() {
+                              selectedMonth = text!;
+                            });
+                          }
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _goToSelectedYearMonth(selectedYear, selectedMonth);
                         },
-                        monthCellBuilder: (BuildContext context, MonthCellDetails details) {
-                          return Container(
-                            alignment: Alignment.topCenter,
-                            decoration: BoxDecoration(
-                              color: _getCellColor(details.date),
-                              border: Border.all(color: Colors.grey, width: 0.2)
-                            ),
-                            child: DateTime(details.date.year, details.date.month, details.date.day) == DateTime(today.year, today.month, today.day)
-                              ? Container(
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.indigo,
-                                ),
-                                height: 25,
-                                width: 25,
-                                alignment: Alignment.center,
-                                child: Text(
-                                  details.date.day.toString(),
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                              )
-                                : Text(
-                              details.date.day.toString(),
-                              style: TextStyle(color: _getTextColor(details.date)),
-                            ),
-                          );
-                        },
-                        monthViewSettings: const MonthViewSettings(
-                            appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
-                            monthCellStyle: MonthCellStyle(
-                              backgroundColor: Colors.white,
-                            ),
-                        ),
-                      );
-                    }),
+                        child: const Text('移動'),
+                      ),
+                    ),
                   ),
                 ],
               ),
+            ),
           ),
-        ),
+          Consumer<EventIndexModel>(builder: (context, model, child) {
+            return SizedBox(
+              height: 1000,
+              child: SfCalendar(
+                dataSource: EventDataSource(model.events),
+                view: view,
+                controller: _controller,
+                cellEndPadding: 0,
+                headerDateFormat: 'yyyy年　MM月',
+                showNavigationArrow: true,
+                onViewChanged: viewChanged,
+                headerStyle: _headerStyle,
+                viewHeaderStyle: ViewHeaderStyle(
+                  backgroundColor: _headerStyle.backgroundColor,
+                  dayTextStyle: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+                todayHighlightColor: Colors.white,
+                /*allowedViews: const <CalendarView>[
+                                      CalendarView.day,
+                                      CalendarView.week,
+                                      CalendarView.month,
+                                ],
+
+                                     */
+                appointmentBuilder: (BuildContext context,
+                    CalendarAppointmentDetails details) {
+                  final EventData appointment = details.appointments.first;
+                  final bool isTimeslotAppointment = _isTimeslotAppointmentView(
+                      appointment, _controller.view);
+                  final bool isStartAppointment = !isTimeslotAppointment &&
+                      _isStartOfAppointmentView(appointment, details.date);
+                  final bool isEndAppointment = !isTimeslotAppointment &&
+                      _isEndOfAppointmentView(
+                          appointment, details.date, _controller.view);
+                  return Container(
+                    margin: EdgeInsets.fromLTRB(isStartAppointment ? 0 : 0, 0,
+                        isEndAppointment ? 0 : 0, 0),
+                    decoration: BoxDecoration(
+                      color: _isTitleToColorBox(appointment.title, appointment.unit),
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(
+                        color: _isTitleToColorBorder(appointment.title, appointment.unit),
+                        width: 1.0,
+                      ),
+                    ),
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 2.0),
+                      child: Text(displayTitle(appointment.title, appointment.unit, appointment.start),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                monthCellBuilder: (BuildContext context, MonthCellDetails details) {
+                  return Container(
+                    alignment: Alignment.topCenter,
+                    decoration: BoxDecoration(
+                        color: _getCellColor(details.date),
+                        border: Border.all(color: Colors.grey, width: 0.2)
+                    ),
+                    child: DateTime(details.date.year, details.date.month, details.date.day) == DateTime(today.year, today.month, today.day)
+                        ? Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.indigo,
+                      ),
+                      height: 25,
+                      width: 25,
+                      alignment: Alignment.center,
+                      child: Text(
+                        details.date.day.toString(),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    )
+                        : Text(
+                      details.date.day.toString(),
+                      style: TextStyle(color: _getTextColor(details.date)),
+                    ),
+                  );
+                },
+                monthViewSettings: const MonthViewSettings(
+                  numberOfWeeksInView: 6, // 表示する週の数
+                  agendaItemHeight: 10,
+                  appointmentDisplayCount: 5, // 表示するアポイントメントの最大数
+                  appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
+                  monthCellStyle: MonthCellStyle(
+                    backgroundColor: Colors.white,
+                  ),
+                ),
+              ),
+            );
+          }),
+        ],
+      ),
     );
+  }
+
+  String displayTitle(String title, String unit, DateTime start) {
+    if (title == 'ミーティング') {
+      return '${DateFormat.Hm('ja').format(start)} $unitミーティング';
+    } else {
+      return '${DateFormat.Hm('ja').format(start)} $title';
+    }
   }
 
   ///祝日(手打ち)
@@ -706,7 +1159,7 @@ class _EventIndexPageState extends State<EventIndexPage> {
         return Colors.deepPurple.shade200;
       } else if (unit == 'Web班') {
         return Colors.cyan.shade200;
-      } else if (unit == 'Network班') {
+      } else if (unit == 'Net班') {
         return Colors.amber.shade200;
       } else if (unit == 'Grid班'){
         return Colors.lightGreen.shade200;
@@ -735,7 +1188,7 @@ class _EventIndexPageState extends State<EventIndexPage> {
         return Colors.deepPurple;
       } else if (unit == 'Web班') {
         return Colors.cyan;
-      } else if (unit == 'Network班') {
+      } else if (unit == 'Net班') {
         return Colors.amber;
       } else if (unit == 'Grid班'){
         return Colors.lightGreen.shade400;
@@ -848,25 +1301,7 @@ class EventDataSource extends CalendarDataSource {
     return _getEventData(index).title;
   }
 
-  @override
-  String getUnit(int index) {
-    return _getEventData(index).unit;
-  }
 
-  @override
-  String getDescription(int index) {
-    return _getEventData(index).description;
-  }
-
-  @override
-  bool getMailSend(int index) {
-    return _getEventData(index).mailSend;
-  }
-
-  @override
-  int getUserName(int index) {
-    return _getEventData(index).userId;
-  }
 
   EventData _getEventData(int index) {
     final dynamic event = appointments![index];

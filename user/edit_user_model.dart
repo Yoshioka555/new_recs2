@@ -49,7 +49,6 @@ class EditMyPageModel extends ChangeNotifier {
 
   //ユーザ情報更新
   Future update(String name, String group, String grade) async {
-    Uint8List? imageBytes;
 
     if(name == ''){
       throw '名前が入力されていません。';
@@ -114,7 +113,6 @@ class EditMyPageModel extends ChangeNotifier {
           return Future.error(response);
         });
 
-    notifyListeners();
   }
 
 }

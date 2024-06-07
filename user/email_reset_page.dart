@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import '../header_footer_drawer/footer.dart';
 import '../login/login_page.dart';
 import 'email_reset_model.dart';
 

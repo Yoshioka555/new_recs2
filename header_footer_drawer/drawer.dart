@@ -169,16 +169,16 @@ class UserDrawer extends StatelessWidget {
               ListTile(
                 title: Link(
                   // 開きたいWebページのURLを指定
-                  uri: Uri.parse('http://192.168.11.115:3000'),
+                  uri: Uri.parse('https://al.kansai-u.ac.jp/'),
                   // targetについては後述
                   target: LinkTarget.self,
                   builder: (BuildContext ctx, FollowLink? openLink) {
                     return TextButton.icon(
                       onPressed: openLink,
                       label: const Text(
-                        '齋藤作 New bole (研究室内のみ)',
+                        '研究室ホームページ',
                       ),
-                      icon: const Icon(Icons.library_books),
+                      icon: const Icon(Icons.home),
                     );
                   },
                 ),

@@ -1,7 +1,7 @@
 class EventData {
   EventData({
     required this.id, required this.title, required this.start, required this.end,
-    required this.unit, required this.description, required this.mailSend, required this.userId
+    required this.unit, required this.description, required this.mailSend, required this.userId, required this.userName,
 });
   final int id;
   final String title;
@@ -11,6 +11,7 @@ class EventData {
   final String description;
   final bool mailSend;
   final int userId;
+  final String userName;
 
   //JSONからオブジェクトを作成するファクトリメソッド
   factory EventData.fromJson(dynamic json) {
@@ -23,6 +24,7 @@ class EventData {
         description: json['description'] as String,
         mailSend: json['mail_send'] as bool,
         userId: json['user_id'] as int,
+        userName: json['user_name'] as String,
     );
   }
 }
