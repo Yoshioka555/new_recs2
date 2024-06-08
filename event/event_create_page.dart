@@ -328,9 +328,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                           DatePicker.showDateTimePicker(
                             context,
                             // 現在の日時
-                            currentTime: DateTime(currentDate.year, currentDate.month, currentDate.day,0,0,0),
+                            currentTime: selectedStartDate,
                             // 選択できる日時の範囲
-                            minTime: DateTime(currentDate.year, currentDate.month, currentDate.day,0,0,0),
+                            minTime: DateTime(currentDate.year,currentDate.month,currentDate.day,0,0,0),
                             maxTime: DateTime(2030, 12, 31,23,0,0),
 
                             // ドラムロールを変化させたときの処理
@@ -341,6 +341,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                             onConfirm: (dateTime) {
                               setState(() {
                                 selectedStartDate = dateTime;
+                                if (selectedStartDate.isAfter(selectedEndDate)) {
+                                  selectedEndDate = selectedStartDate;
+                                }
                               });
                             },
 
@@ -377,9 +380,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                           DatePicker.showDateTimePicker(
                             context,
                             // 現在の日時
-                            currentTime: DateTime(currentDate.year, currentDate.month, currentDate.day,23,0,0),
+                            currentTime: selectedEndDate,
                             // 選択できる日時の範囲
-                            minTime: DateTime(currentDate.year, currentDate.month, currentDate.day,0,0,0),
+                            minTime: selectedStartDate,
                             maxTime: DateTime(2030, 12, 31),
 
                             // ドラムロールを変化させたときの処理
@@ -550,6 +553,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         try {
                           //イベント追加
                           await model.addEvent(_titleController.text, selectedStartDate, selectedEndDate, _unit, _descriptionController.text, _mailSend);
+                          if (_mailSend == true) {
+                            await model.sendEmail(_titleController.text, selectedStartDate, selectedEndDate, _unit, _descriptionController.text);
+                          }
 
                           Navigator.of(context).pop();
                           const snackBar = SnackBar(

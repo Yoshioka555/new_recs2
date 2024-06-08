@@ -336,7 +336,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                           DatePicker.showDateTimePicker(
                             context,
                             // 現在の日時
-                            currentTime: DateTime(currentDate.year, currentDate.month, currentDate.day,0,0,0),
+                            currentTime: selectedStartDate,
                             // 選択できる日時の範囲
                             minTime: DateTime(currentDate.year, currentDate.month, currentDate.day,0,0,0),
                             maxTime: DateTime(2030, 12, 31,23,0,0),
@@ -349,6 +349,9 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                             onConfirm: (dateTime) {
                               setState(() {
                                 selectedStartDate = dateTime;
+                                if (selectedStartDate.isAfter(selectedEndDate)) {
+                                  selectedEndDate = selectedStartDate;
+                                }
                               });
                             },
 
@@ -385,9 +388,9 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                           DatePicker.showDateTimePicker(
                             context,
                             // 現在の日時
-                            currentTime: DateTime(currentDate.year, currentDate.month, currentDate.day,23,0,0),
+                            currentTime: selectedEndDate,
                             // 選択できる日時の範囲
-                            minTime: DateTime(currentDate.year, currentDate.month, currentDate.day,0,0,0),
+                            minTime: selectedStartDate,
                             maxTime: DateTime(2030, 12, 31),
 
                             // ドラムロールを変化させたときの処理
@@ -631,6 +634,9 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                               try {
                                 //イベント更新
                                 await model.updateEvent(widget.event.id, _titleController.text, selectedStartDate, selectedEndDate, _unit, _descriptionController.text, _mailSend);
+                                if (_mailSend == true) {
+                                  await model.sendEmail(_titleController.text, selectedStartDate, selectedEndDate, _unit, _descriptionController.text);
+                                }
                                 Navigator.of(context).pop();
                                 const snackBar = SnackBar(
                                   backgroundColor: Colors.green,
