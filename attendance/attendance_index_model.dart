@@ -3,11 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:labmaidfastapi/domain/event_data.dart';
 
-class EventIndexModel extends ChangeNotifier {
+import '../domain/attendance_data.dart';
 
-  List<EventData> events = [];
+class AttendanceIndexModel extends ChangeNotifier {
+
+  List<AttendanceData> attendances = [];
 
   String? userId;
   int? id;
@@ -21,11 +22,11 @@ class EventIndexModel extends ChangeNotifier {
   }
 
 
-  void fetchEvent() async {
+  void fetchAttendance() async {
     final user = FirebaseAuth.instance.currentUser;
     userId = user!.uid;
 
-    var uri = Uri.parse('http://localhost:8000/events');
+    var uri = Uri.parse('http://localhost:8000/attendances');
 
     // GETリクエストを送信
     var response = await http.get(uri);
@@ -39,7 +40,7 @@ class EventIndexModel extends ChangeNotifier {
       final List<dynamic> body = jsonDecode(responseBody);
 
       // 必要なデータを取得
-      events = body.map((dynamic json) => EventData.fromJson(json)).toList();
+      attendances = body.map((dynamic json) => AttendanceData.fromJson(json)).toList();
 
       // 取得したデータを使用する
     } else {

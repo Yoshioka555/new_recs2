@@ -21,7 +21,7 @@ class _EmailResetPageState extends State<EmailResetPage> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.lightGreen,
           title: const Text('Email変更',
             style: TextStyle(
               color: Colors.white,
@@ -35,78 +35,102 @@ class _EmailResetPageState extends State<EmailResetPage> {
             color: Colors.white,
           ),
         ),
-        body: Center(
-          child: Consumer<EmailResetModel>(builder: (context, model, child) {
+        body: Consumer<EmailResetModel>(builder: (context, model, child) {
 
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: model.emailController,
-                    decoration: const InputDecoration(
-                        hintText: 'Email　　※必要'
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  TextFormField(
-                    controller: model.passwordController,
-                    obscureText: _isObscure,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      suffixIcon: IconButton(
-                        icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility),
-
-                        onPressed: () {
-                          setState(() {
-                            _isObscure = !_isObscure;
-                          });
-                        },
-                      )
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-
-                  ElevatedButton(
-                    onPressed: () async {
-                      model.startLoading();
-                      try {
-                        await model.updateUserEmail();
-                        
-                        FirebaseAuth.instance.signOut();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) {
-                                return const LoginPage();
-                              }
+          return Stack(
+            children: [
+              Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 700),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: TextField(
+                            controller: model.emailController,
+                            decoration: const InputDecoration(
+                                labelText: 'Email　　※必要',
+                                icon: Icon(Icons.email),
+                            ),
                           ),
-                        );
-                        const snackBar = SnackBar(
-                          backgroundColor: Colors.green,
-                          content: Text('メールアドレスの変更確認のメールを新しいメールアドレスに送信しました。確認してください。'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      } catch (error) {
-                        final snackBar = SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text(error.toString()),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      } finally {
-                        model.endLoading();
-                      }
-                    },
-                    child: const Text('変更する'),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 700),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: TextFormField(
+                            controller: model.passwordController,
+                            obscureText: _isObscure,
+                            decoration: InputDecoration(
+                                labelText: 'Password',
+                                icon: const Icon(Icons.lock),
+                                suffixIcon: IconButton(
+                                  icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility),
+
+                                  onPressed: () {
+                                    setState(() {
+                                      _isObscure = !_isObscure;
+                                    });
+                                  },
+                                )
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 250),
+                        child: SizedBox(
+                          //横長がウィンドウサイズの３割になる設定
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          height: 40,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              model.startLoading();
+                              try {
+                                await model.updateUserEmail();
+
+                                FirebaseAuth.instance.signOut();
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) {
+                                        return const LoginPage();
+                                      }
+                                  ),
+                                );
+                                const snackBar = SnackBar(
+                                  backgroundColor: Colors.green,
+                                  content: Text('メールアドレスの変更確認のメールを新しいメールアドレスに送信しました。確認してください。'),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              } catch (error) {
+                                final snackBar = SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text(error.toString()),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              } finally {
+                                model.endLoading();
+                              }
+                            },
+                            child: const Text('変更する'),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            );
-          }),
-        ),
+            ],
+          );
+        }),
       ),
     );
   }

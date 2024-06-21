@@ -26,7 +26,7 @@ class ResetPasswordModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future sendPasswordResetEmail() async {
-    this.email = emailController.text;
+    email = emailController.text;
 
     if (email != null ) {
       await _auth.sendPasswordResetEmail(email: email!);

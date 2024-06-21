@@ -22,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
   //エラーを表示
   String? error;
   String _grade = 'B4';
-  String _gradedisplay = 'B4';
+  String _gradeDisplay = 'B4';
 
   Uint8List? imageData;
 
@@ -34,7 +34,7 @@ class _RegisterPageState extends State<RegisterPage> {
   void _handleDropdownButton(String grade) =>
       setState(() {
         _grade = grade;
-        _gradedisplay = grade;
+        _gradeDisplay = grade;
       });
 
   @override
@@ -59,12 +59,12 @@ class _RegisterPageState extends State<RegisterPage> {
               color: Colors.white,
           ),
         ),
-        body: Center(
-          child: Consumer<RegisterModel>(builder: (context, model, child) {
-            return Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+        body: Consumer<RegisterModel>(builder: (context, model, child) {
+          return Stack(
+            children: [
+              Center(
+                //スクロール機能
+                child: SingleChildScrollView(
                   child: Column(
                     children: [
                       Container(
@@ -88,59 +88,99 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
                       ),
-                      TextField(
-                        controller: model.emailController,
-                        decoration: const InputDecoration(
-                            hintText: 'Email　　※必要'
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 700),
+                        child: SizedBox(
+                          //横長がウィンドウサイズの８割になる設定
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: TextField(
+                            controller: model.emailController,
+                            decoration: const InputDecoration(
+                                labelText: 'New Email　　※必要',
+                                //メールのアイコン
+                                icon: Icon(Icons.mail),
+                            ),
+                            onChanged: (text) {
+                              model.setEmail(text);
+                            },
+                          ),
                         ),
-                        onChanged: (text) {
-                          model.setEmail(text);
-                        },
                       ),
                       const SizedBox(
                         height: 16,
                       ),
-                      TextField(
-                        controller: model.passwordController,
-                        decoration: const InputDecoration(
-                          hintText: 'Password　　※必要',
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: 700,
                         ),
-                        onChanged: (text) {
-                          model.setPassword(text);
-                        },
+                        child: SizedBox(
+                          //横長がウィンドウサイズの８割になる設定
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: TextField(
+                            controller: model.passwordController,
+                            decoration: const InputDecoration(
+                              labelText: 'New Password　　※必要',
+                              //鍵のアイコン
+                              icon: Icon(Icons.lock),
+
+                            ),
+                            onChanged: (text) {
+                              model.setPassword(text);
+                            },
+                          ),
+                        ),
                       ),
                       const SizedBox(
                         height: 16,
                       ),
-                      TextFormField(
-                        controller: model.passwordConfirmController,
-                        obscureText: _isObscure,
-                        decoration: InputDecoration(
-                            labelText: 'Password',
-                            suffixIcon: IconButton(
-                              icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility),
-                              onPressed: () {
-                                setState(() {
-                                  _isObscure = !_isObscure;
-                                });
-                              },
-                            )
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: 700,
                         ),
-                        onChanged: (text) {
-                          model.setPassConfirm(text);
-                        },
+                        child: SizedBox(
+                          //横長がウィンドウサイズの８割になる設定
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: TextFormField(
+                            controller: model.passwordConfirmController,
+                            obscureText: _isObscure,
+                            decoration: InputDecoration(
+                                labelText: 'Password Confirmation',
+                                //鍵のアイコン
+                                icon: const Icon(Icons.lock),
+                                suffixIcon: IconButton(
+                                  icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isObscure = !_isObscure;
+                                    });
+                                  },
+                                )
+                            ),
+                            onChanged: (text) {
+                              model.setPassConfirm(text);
+                            },
+                          ),
+                        ),
                       ),
                       const SizedBox(
                         height: 16,
                       ),
-                      TextField(
-                        controller: model.nameController,
-                        decoration: const InputDecoration(
-                          hintText: '名前(苗字のみ)　　※必要',
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 700),
+                        child: SizedBox(
+                          //横長がウィンドウサイズの８割になる設定
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: TextField(
+                            controller: model.nameController,
+                            decoration: const InputDecoration(
+                              labelText: '名前(苗字のみ)　　※必要',
+                              icon: Icon(Icons.person),
+                            ),
+                            onChanged: (text) {
+                              model.setName(text);
+                            },
+                          ),
                         ),
-                        onChanged: (text) {
-                          model.setName(text);
-                        },
                       ),
                       const SizedBox(
                         height: 16,
@@ -151,67 +191,76 @@ class _RegisterPageState extends State<RegisterPage> {
                           fontSize: 15,
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      Column(
                         children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Radio(
-                                activeColor: Colors.blueAccent,
-                                value: 'Web班',
-                                groupValue: _group,
-                                onChanged: (text) {
-                                  _handleRadioButton(text!);
-                                  model.groupController.text = _group;
-                                  model.setGroup(_group);
-                                },
+                              Row(
+                                children: [
+                                  Radio(
+                                    activeColor: Colors.blueAccent,
+                                    value: 'Web班',
+                                    groupValue: _group,
+                                    onChanged: (text) {
+                                      _handleRadioButton(text!);
+                                      model.groupController.text = _group;
+                                      model.setGroup(_group);
+                                    },
+                                  ),
+                                  const Text('Web班'),
+                                ],
                               ),
-                              const Text('Web班'),
+                              Row(
+                                children: [
+                                  Radio(
+                                    activeColor: Colors.blueAccent,
+                                    value: 'Grid班',
+                                    groupValue: _group,
+                                    onChanged: (text) {
+                                      _handleRadioButton(text!);
+                                      model.groupController.text = _group;
+                                      model.setGroup(_group);
+                                    },
+                                  ),
+                                  const Text('Grid班'),
+                                ],
+                              ),
                             ],
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Radio(
-                                activeColor: Colors.blueAccent,
-                                value: 'Grid班',
-                                groupValue: _group,
-                                onChanged: (text) {
-                                  _handleRadioButton(text!);
-                                  model.groupController.text = _group;
-                                  model.setGroup(_group);
-                                },
+                              Row(
+                                children: [
+                                  Radio(
+                                    activeColor: Colors.blueAccent,
+                                    value: 'Network班',
+                                    groupValue: _group,
+                                    onChanged: (text) {
+                                      _handleRadioButton(text!);
+                                      model.groupController.text = _group;
+                                      model.setGroup(_group);
+                                    },
+                                  ),
+                                  const Text('Network班'),
+                                ],
                               ),
-                              const Text('Grid班'),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Radio(
-                                activeColor: Colors.blueAccent,
-                                value: 'Network班',
-                                groupValue: _group,
-                                onChanged: (text) {
-                                  _handleRadioButton(text!);
-                                  model.groupController.text = _group;
-                                  model.setGroup(_group);
-                                },
+                              Row(
+                                children: [
+                                  Radio(
+                                    activeColor: Colors.blueAccent,
+                                    value: '教員',
+                                    groupValue: _group,
+                                    onChanged: (text) {
+                                      _handleRadioButton(text!);
+                                      model.groupController.text = _group;
+                                      model.setGroup(_group);
+                                    },
+                                  ),
+                                  const Text('教員'),
+                                ],
                               ),
-                              const Text('Network班'),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Radio(
-                                activeColor: Colors.blueAccent,
-                                value: '教員',
-                                groupValue: _group,
-                                onChanged: (text) {
-                                  _handleRadioButton(text!);
-                                  model.groupController.text = _group;
-                                  model.setGroup(_group);
-                                },
-                              ),
-                              const Text('教員'),
                             ],
                           ),
                         ],
@@ -226,7 +275,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       DropdownButton(
-                          value: _gradedisplay,
+                          value: _gradeDisplay,
                           items: const [
                             DropdownMenuItem(
                               value: 'B4',
@@ -266,65 +315,74 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(
                         height: 16,
                       ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          model.startLoading();
+                      ConstrainedBox(
+                        //ボタンの横長の最大値の設定
+                        constraints: const BoxConstraints(maxWidth: 250),
+                        child: SizedBox(
+                          //横長がウィンドウサイズの３割になる設定
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          height: 40,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              model.startLoading();
 
-                          try {
-                            await model.signUp(imageData);
-                            //ユーザー登録
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) {
-                                    return const Footer(pageNumber: 0);
-                                  }
-                              ),
-                            );
-                          } on FirebaseAuthException catch (e) {
-                            //ユーザー登録に失敗した場合
-                            if (e.code == 'weak-password') {
-                              error = 'パスワードが弱いです。６文字以上を入力してください。';
-                            }
-                            else if (e.code == 'email-already-in-use') {
-                              error = 'すでに利用されているメールアドレス';
-                            }
-                            else if (e.code == 'invalid-email') {
-                              error = 'メールアドレスの形をしていません。';
-                            }
-                            else {
-                              error = 'アカウント作成エラー';
-                            }
-                            final snackBar = SnackBar(
-                              backgroundColor: Colors.red,
-                              content: Text(error.toString()),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          } catch (e) {
-                            final snackBar = SnackBar(
-                              backgroundColor: Colors.red,
-                              content: Text(e.toString()),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          } finally {
-                            model.endLoading();
-                          }
-                        },
-                        child: const Text('登録する'),
+                              try {
+                                await model.signUp(imageData);
+                                //ユーザー登録
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) {
+                                        return const Footer(pageNumber: 0);
+                                      }
+                                  ),
+                                );
+                              } on FirebaseAuthException catch (e) {
+                                //ユーザー登録に失敗した場合
+                                if (e.code == 'weak-password') {
+                                  error = 'パスワードが弱いです。６文字以上を入力してください。';
+                                }
+                                else if (e.code == 'email-already-in-use') {
+                                  error = 'すでに利用されているメールアドレス';
+                                }
+                                else if (e.code == 'invalid-email') {
+                                  error = 'メールアドレスの形をしていません。';
+                                }
+                                else {
+                                  error = 'アカウント作成エラー';
+                                }
+                                final snackBar = SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text(error.toString()),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              } catch (e) {
+                                final snackBar = SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text(e.toString()),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              } finally {
+                                model.endLoading();
+                              }
+                            },
+                            child: const Text('登録する'),
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
-                if (model.isLoading)
-                  Container(
-                    color: Colors.black45,
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+              ),
+              if (model.isLoading)
+                Container(
+                  color: Colors.black45,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
                   ),
-              ],
-            );
-          }),
-        ),
+                ),
+            ],
+          );
+        }),
       ),
     );
   }

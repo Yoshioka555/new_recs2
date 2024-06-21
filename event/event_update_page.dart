@@ -10,9 +10,8 @@ import 'event_update_model.dart';
 class UpdateEventPage extends StatefulWidget {
 
   final EventData event;
-  final int userId;
   final String content;
-  const UpdateEventPage({Key? key, required this.event, required this.userId, required this.content}) : super(key:key);
+  const UpdateEventPage({Key? key, required this.event, required this.content}) : super(key:key);
   @override
   _UpdateEventPageState createState() => _UpdateEventPageState();
 }
@@ -555,7 +554,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                     const SizedBox(
                       height: 15.0,
                     ),
-                    widget.event.userId == widget.userId ? Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
@@ -679,7 +678,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                           ),
                         ),
                       ],
-                    ) : const SizedBox(),
+                    ),
                   ],
                 ),
               ),

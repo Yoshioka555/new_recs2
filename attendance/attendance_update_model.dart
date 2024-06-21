@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-class UpdateEventModel extends ChangeNotifier {
+class UpdateAttendanceModel extends ChangeNotifier {
 
   String? firebaseUserId;
   String? email;
@@ -43,7 +43,7 @@ class UpdateEventModel extends ChangeNotifier {
 
 
 
-  Future updateEvent(int id, String title, DateTime start, DateTime end, String unit, String description, bool mailSend) async {
+  Future updateAttendance(int id, String title, DateTime start, DateTime end, String description, bool mailSend, bool undecided) async {
 
     if (title =='') {
       throw 'タイトルが入力されていません。';
@@ -52,14 +52,14 @@ class UpdateEventModel extends ChangeNotifier {
       throw '詳細が入力されていません。';
     }
 
-    var uri = Uri.parse('http://localhost:8000/events/$id');
+    var uri = Uri.parse('http://localhost:8000/attendances/$id');
 
     // 送信するデータを作成
     Map<String, dynamic> data = {
       'title': title,
       'description': description,
-      'unit': unit,
       'mail_send': mailSend,
+      'undecided': undecided,
       'start': start.toIso8601String(),
       'end': end.toIso8601String(),
       'user_id': userId,
@@ -93,7 +93,7 @@ class UpdateEventModel extends ChangeNotifier {
   }
 
   Future deleteEvent(int id) async {
-    var uri = Uri.parse('http://localhost:8000/events/$id');
+    var uri = Uri.parse('http://localhost:8000/attendances/$id');
 
     final response = await http.delete(uri);
 
@@ -107,9 +107,9 @@ class UpdateEventModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future sendEmail(String title, DateTime start, DateTime end, String unit, String description) async {
-    Uri url = Uri.parse('http://localhost:8000/event_mail');
-    final response = await http.post(url, body: {'name': name, 'subject': subject(title,unit), 'from_email': email, 'text': textMessages(title,start,end,unit,description)});
+  Future sendEmail(String title, DateTime start, DateTime end, String description, bool undecided) async {
+    Uri url = Uri.parse('http://localhost:8000/mail');
+    final response = await http.post(url, body: {'name': name, 'subject': subject(title), 'from_email': email, 'text': textMessages(title,start,end,description, undecided)});
 
     if (response.statusCode == 200) {
       // POSTリクエストが成功した場合
@@ -118,22 +118,41 @@ class UpdateEventModel extends ChangeNotifier {
       // POSTリクエストが失敗した場合
       print('Request failed with status: ${response.statusCode}');
     }
-
-    notifyListeners();
   }
 
-  String textMessages(String title, DateTime start, DateTime end, String unit, String description) {
+  String textMessages(String title, DateTime start, DateTime end, String description, bool undecided) {
     DateTime currentDate = DateTime.now();
-    if(title == 'ミーティング') {
+    if(title == '遅刻') {
+      if (undecided == true) {
+        return 'メール送信日：${DateFormat.yMMMd('ja')
+            .format(currentDate)
+            .toString()}(${DateFormat.E('ja').format(currentDate)})\n'
+            '$title\n'
+            '作成者：$name\n'
+            'メールアドレス：${email!}\n\n'
+            '$description\n'
+            '到着予定時刻：未定\n';
+      } else {
+        return 'メール送信日：${DateFormat.yMMMd('ja')
+            .format(currentDate)
+            .toString()}(${DateFormat.E('ja').format(currentDate)})\n'
+            '$title\n'
+            '作成者：$name\n'
+            'メールアドレス：${email!}\n\n'
+            '$description\n'
+            '到着予定時刻：${DateFormat.yMMMd('ja')
+            .format(start)
+            .toString()}(${DateFormat.E('ja').format(start)})ー${DateFormat.Hm(
+            'ja').format(start)}\n';
+      }
+    } else if(title == '早退') {
       return 'メール送信日：${DateFormat.yMMMd('ja').format(currentDate).toString()}(${DateFormat.E('ja').format(currentDate)})\n'
-          '$unit $title\n'
+          '$title\n'
           '作成者：$name\n'
           'メールアドレス：${email!}\n\n'
           '$description\n'
-          '開始時刻：${DateFormat.yMMMd('ja').format(start).toString()}(${DateFormat.E('ja').format(start)})ー${DateFormat.Hm('ja').format(start)}\n'
-          '終了時刻：${DateFormat.yMMMd('ja').format(end).toString()}(${DateFormat.E('ja').format(end)})ー${DateFormat.Hm('ja').format(end)}\n';
-    }
-    else {
+          '早退予定時刻：${DateFormat.yMMMd('ja').format(start).toString()}(${DateFormat.E('ja').format(start)})ー${DateFormat.Hm('ja').format(start)}\n';
+    } else {
       return 'メール送信日：${DateFormat.yMMMd('ja').format(currentDate).toString()}(${DateFormat.E('ja').format(currentDate)})\n'
           '$title\n'
           '作成者：$name\n'
@@ -144,12 +163,8 @@ class UpdateEventModel extends ChangeNotifier {
     }
   }
 
-  String subject(String title, String unit) {
-    if (title == 'ミーティング') {
-      return '$name：$unit $title';
-    } else {
-      return '$name：$title';
-    }
+  String subject(String title) {
+    return '$name：$title';
   }
 
 

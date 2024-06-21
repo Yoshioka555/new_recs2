@@ -4,25 +4,26 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'event_create_model.dart';
+import '../domain/attendance_data.dart';
+import 'attendance_update_model.dart';
 
-class CreateEventPage extends StatefulWidget {
+class UpdateAttendancePage extends StatefulWidget {
   final bool withDuration;
+  final AttendanceData attendance;
 
-  const CreateEventPage({Key? key, this.withDuration = false})
+  const UpdateAttendancePage({Key? key, required this.attendance, this.withDuration = false})
       : super(key: key);
 
   @override
-  _CreateEventPageState createState() => _CreateEventPageState();
+  _UpdateAttendancePageState createState() => _UpdateAttendancePageState();
 }
 
-class _CreateEventPageState extends State<CreateEventPage> {
+class _UpdateAttendancePageState extends State<UpdateAttendancePage> {
 
   final GlobalKey<FormState> _form = GlobalKey();
-  String _content = "ミーティング";
-  String _unit = '全体';
-  bool _display = false;
-  bool _mailSend = true;
+
+  late bool undecided;
+  late bool _mailSend;
   DateTime currentDate = DateTime.now();
   late DateTime selectedStartDate;
   late DateTime selectedEndDate;
@@ -33,11 +34,12 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
   @override
   void initState() {
-    _titleController = TextEditingController();
-    _titleController.text = 'ミーティング';
-    _descriptionController = TextEditingController();
-    selectedStartDate = DateTime(currentDate.year,currentDate.month,currentDate.day,00,00,00);
-    selectedEndDate = DateTime(currentDate.year,currentDate.month,currentDate.day,23,00,00);
+    _titleController = TextEditingController(text: widget.attendance.title);
+    _descriptionController = TextEditingController(text: widget.attendance.description);
+    selectedStartDate = widget.attendance.start;
+    selectedEndDate = widget.attendance.end;
+    _mailSend = widget.attendance.mailSend;
+    undecided = widget.attendance.undecided;
     _descriptionNode = FocusNode();
     super.initState();
   }
@@ -48,10 +50,17 @@ class _CreateEventPageState extends State<CreateEventPage> {
     super.dispose();
   }
 
+  void reset() {
+    setState(() {
+      selectedStartDate = DateTime(currentDate.year,currentDate.month,currentDate.day,00,00,00);
+      selectedEndDate = DateTime(currentDate.year,currentDate.month,currentDate.day,23,00,00);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<CreateEventModel>(
-      create: (_) => CreateEventModel()..fetchUser(),
+    return ChangeNotifierProvider<UpdateAttendanceModel>(
+      create: (_) => UpdateAttendanceModel()..fetchUser(),
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -67,7 +76,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
             ),
           ),
           title: const Text(
-            "Create New Event",
+            "Update Attendance",
             style: TextStyle(
               color: Color(0xff626262),
               fontSize: 20.0,
@@ -75,7 +84,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
             ),
           ),
         ),
-        body: Consumer<CreateEventModel>(builder: (context, model, child) {
+        body: Consumer<UpdateAttendanceModel>(builder: (context, model, child) {
           return Form(
             key: _form,
             child: Align(
@@ -146,7 +155,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  Text(model.name,
+                                  Text(widget.attendance.userName,
                                     style: const TextStyle(
                                       fontSize: 17.0,
                                     ),
@@ -181,37 +190,26 @@ class _CreateEventPageState extends State<CreateEventPage> {
                                     width: 10,
                                   ),
                                   DropdownButton(
-                                    value: _content,
+                                    value: _titleController.text,
                                     items: const [
                                       DropdownMenuItem(
-                                        value: 'ミーティング',
-                                        child: Text('ミーティング'),
+                                        value: '遅刻',
+                                        child: Text('遅刻'),
                                       ),
                                       DropdownMenuItem(
-                                        value: '輪講',
-                                        child: Text('輪講'),
+                                        value: '欠席',
+                                        child: Text('欠席'),
                                       ),
                                       DropdownMenuItem(
-                                        value: 'その他',
-                                        child: Text('その他'),
+                                        value: '早退',
+                                        child: Text('早退'),
                                       ),
                                     ],
                                     onChanged: (text) {
                                       setState(() {
-                                        _content = text.toString();
-                                        if (text.toString() == 'ミーティング') {
-                                          _display = false;
-                                          _titleController.text = 'ミーティング';
-                                        }
-                                        if (text.toString() == '輪講') {
-                                          _display = false;
-                                          _titleController.text = '輪講';
-                                        }
-                                        if (text.toString() == 'その他') {
-                                          _display = true;
-                                          _titleController.text = '';
-                                        }
+                                        _titleController.text = text.toString();
                                       });
+                                      reset();
                                     },
                                   ),
                                 ],
@@ -220,196 +218,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                             const SizedBox(
                               height: 15,
                             ),
-                            TextFormField(
-                              controller: _titleController,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(7),
-                                  borderSide: const BorderSide(
-                                    width: 2,
-                                    color: Color(0xffb3b9ed),
-                                  ),
-                                ),
-                                disabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(7),
-                                  borderSide: const BorderSide(
-                                    width: 2,
-                                    color: Color(0xffb3b9ed),
-                                  ),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(7),
-                                  borderSide: const BorderSide(
-                                    width: 2,
-                                    color: Color(0xffb3b9ed),
-                                  ),
-                                ).copyWith(
-                                  borderSide: const BorderSide(
-                                    width: 2,
-                                    color: Color(0xfff96c6c),
-                                  ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(7),
-                                  borderSide: const BorderSide(
-                                    width: 2,
-                                    color: Color(0xffb3b9ed),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(7),
-                                  borderSide: const BorderSide(
-                                    width: 2,
-                                    color: Color(0xffb3b9ed),
-                                  ),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(7),
-                                  borderSide: const BorderSide(
-                                    width: 2,
-                                    color: Color(0xffb3b9ed),
-                                  ),
-                                ),
-                                hintText: "Event Title",
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff626262),
-                                  fontSize: 17,
-                                ),
-                                labelStyle: const TextStyle(
-                                  color: Color(0xff626262),
-                                  fontSize: 17,
-                                ),
-                                helperStyle: const TextStyle(
-                                  color: Color(0xff626262),
-                                  fontSize: 17,
-                                ),
-                                errorStyle: const TextStyle(
-                                  color: Color(0xfff96c6c),
-                                  fontSize: 12,
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 10,
-                                  horizontal: 20,
-                                ),
-                              ).copyWith(),
-                              style: const TextStyle(
-                                color: Color(0xff626262),
-                                fontSize: 17.0,
-                              ),
-                              enabled: _display,
-
-                              validator: (value) {
-                                if (_titleController.text == "") {
-                                  return "Please enter event title.";
-                                }
-
-                                return null;
-                              },
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.next,
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            unitSelector(_content),
-                            Container(
-                              padding: const EdgeInsets.all(5.0),
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 2,
-                                  color: const Color(0xffb3b9ed),
-                                ),
-                                borderRadius: BorderRadius.circular(7),
-                              ),
-                              alignment: Alignment.centerLeft,
-                              child: TextButton(
-                                child: Text('開始時刻：${DateFormat.yMMMd('ja').format(selectedStartDate).toString()}(${DateFormat.E('ja').format(selectedStartDate)})ー${DateFormat.Hm('ja').format(selectedStartDate)}',
-                                  style: const TextStyle(
-                                    fontSize: 17.0,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  DatePicker.showDateTimePicker(
-                                    context,
-                                    // 現在の日時
-                                    currentTime: selectedStartDate,
-                                    // 選択できる日時の範囲
-                                    minTime: DateTime(currentDate.year,currentDate.month,currentDate.day,0,0,0),
-                                    maxTime: DateTime(2030, 12, 31,23,0,0),
-
-                                    // ドラムロールを変化させたときの処理
-                                    onChanged: (dateTime) {
-                                    },
-
-                                    // 「完了」を押したときの処理
-                                    onConfirm: (dateTime) {
-                                      setState(() {
-                                        selectedStartDate = dateTime;
-                                        if (selectedStartDate.isAfter(selectedEndDate)) {
-                                          selectedEndDate = selectedStartDate;
-                                        }
-                                      });
-                                    },
-
-                                    // 「キャンセル」を押したときの処理
-                                    onCancel: () {
-                                    },
-                                    //言語
-                                    locale: LocaleType.jp,
-                                  );
-                                },
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(5.0),
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 2,
-                                  color: const Color(0xffb3b9ed),
-                                ),
-                                borderRadius: BorderRadius.circular(7),
-                              ),
-                              alignment: Alignment.centerLeft,
-                              child: TextButton(
-                                child: Text('終了時刻：${DateFormat.yMMMd('ja').format(selectedEndDate).toString()}(${DateFormat.E('ja').format(selectedEndDate)})ー${DateFormat.Hm('ja').format(selectedEndDate)}',
-                                  style: const TextStyle(
-                                    fontSize: 17.0,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  DatePicker.showDateTimePicker(
-                                    context,
-                                    // 現在の日時
-                                    currentTime: selectedEndDate,
-                                    // 選択できる日時の範囲
-                                    minTime: selectedStartDate,
-                                    maxTime: DateTime(2030, 12, 31),
-
-                                    // ドラムロールを変化させたときの処理
-                                    onChanged: (dateTime) {
-                                    },
-
-                                    // 「完了」を押したときの処理
-                                    onConfirm: (dateTime) {
-                                      setState(() {
-                                        selectedEndDate = dateTime;
-                                      });
-                                    },
-
-                                    // 「キャンセル」を押したときの処理
-                                    onCancel: () {
-                                    },
-                                    //言語
-                                    locale: LocaleType.jp,
-                                  );
-                                },
-                              ),
-                            ),
+                            _titleDateTime(_titleController.text),
                             const SizedBox(
                               height: 15,
                             ),
@@ -557,15 +366,15 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
                                 try {
                                   //イベント追加
-                                  await model.addEvent(_titleController.text, selectedStartDate, selectedEndDate, _unit, _descriptionController.text, _mailSend);
+                                  //await model.addAttendance(_titleController.text, selectedStartDate, selectedEndDate, _unit, _descriptionController.text, _mailSend);
                                   if (_mailSend == true) {
-                                    await model.sendEmail(_titleController.text, selectedStartDate, selectedEndDate, _unit, _descriptionController.text);
+                                    //await model.sendEmail(_titleController.text, selectedStartDate, selectedEndDate, _unit, _descriptionController.text);
                                   }
 
                                   Navigator.of(context).pop();
                                   const snackBar = SnackBar(
                                     backgroundColor: Colors.green,
-                                    content: Text('イベントの登録をしました。'),
+                                    content: Text('イベントの編集をしました。'),
                                   );
                                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                 } catch (e) {
@@ -594,7 +403,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                                   ],
                                 ),
                                 child: const Text(
-                                  'Create Event',
+                                  'Update Event',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
@@ -616,8 +425,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
     );
   }
 
-  Widget unitSelector(String content) {
-    if (content == 'ミーティング'){
+  Widget _titleDateTime(String title) {
+    if (title == '遅刻') {
       return Column(
         children: [
           Container(
@@ -625,76 +434,356 @@ class _CreateEventPageState extends State<CreateEventPage> {
             width: double.infinity,
             decoration: BoxDecoration(
               border: Border.all(
-                  width: 2,
-                  color: const Color(0xffb3b9ed),
+                width: 2,
+                color: const Color(0xffb3b9ed),
               ),
               borderRadius: BorderRadius.circular(7),
             ),
-            child: Row(
-                children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  const Text('参加単位：',
-                    style: TextStyle(
-                      fontSize: 17.0,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  DropdownButton(
-                      value: _unit,
-                      items: const [
-                        DropdownMenuItem(
-                          value: '全体',
-                          child: Text('全体'),
-                        ),
-                        DropdownMenuItem(
-                          value: '個人',
-                          child: Text('個人'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Net班',
-                          child: Text('Net班'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Grid班',
-                          child: Text('Grid班'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Web班',
-                          child: Text('Web班'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'B4',
-                          child: Text('B4'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'M1',
-                          child: Text('M1'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'M2',
-                          child: Text('M2'),
-                        ),
-                      ],
-                      onChanged: (text) {
-                        setState(() {
-                          _unit = text.toString();
-                        });
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              child: Text('日付：${DateFormat.yMMMd('ja').format(selectedStartDate).toString()}(${DateFormat.E('ja').format(selectedStartDate)})',
+                style: const TextStyle(
+                  fontSize: 17.0,
+                ),
+              ),
+              onPressed: () {
+                DatePicker.showDatePicker(
+                  context,
+                  // 現在の日時
+                  currentTime: selectedStartDate,
+                  // 選択できる日時の範囲
+                  minTime: DateTime(currentDate.year,currentDate.month,currentDate.day),
+                  maxTime: DateTime(2030, 12, 31),
+
+                  // ドラムロールを変化させたときの処理
+                  onChanged: (dateTime) {
+                  },
+
+                  // 「完了」を押したときの処理
+                  onConfirm: (dateTime) {
+                    setState(() {
+                      selectedStartDate = dateTime;
+                      if (selectedStartDate.isAfter(selectedEndDate)) {
+                        selectedEndDate = selectedStartDate;
                       }
-                  ),
-                ]),
+                    });
+                  },
+
+                  // 「キャンセル」を押したときの処理
+                  onCancel: () {
+                  },
+                  //言語
+                  locale: LocaleType.jp,
+                );
+              },
+            ),
           ),
           const SizedBox(
             height: 15,
           ),
+          Row(
+            children: [
+              Expanded(
+                child: undecided
+                    ? Container(
+                  padding: const EdgeInsets.all(5.0),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 2,
+                      color: const Color(0xffb3b9ed),
+                    ),
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      '到着予定時刻未定(0:00)',
+                      style: TextStyle(
+                        fontSize: 17,
+                      ),
+                    ),
+                  ),
+                )
+                    : Container(
+                  padding: const EdgeInsets.all(5.0),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 2,
+                      color: const Color(0xffb3b9ed),
+                    ),
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    child: Text('到着予定時刻：${DateFormat.Hm('ja').format(selectedStartDate)}',
+                      style: const TextStyle(
+                        fontSize: 17.0,
+                      ),
+                    ),
+                    onPressed: () {
+                      DatePicker.showTimePicker(
+                        context,
+                        // 現在の日時
+                        currentTime: selectedStartDate,
+
+                        // ドラムロールを変化させたときの処理
+                        onChanged: (dateTime) {
+                        },
+
+                        // 「完了」を押したときの処理
+                        onConfirm: (dateTime) {
+                          setState(() {
+                            selectedStartDate = dateTime;
+                            if (selectedStartDate.isAfter(selectedEndDate)) {
+                              selectedEndDate = selectedStartDate;
+                            }
+                          });
+                        },
+
+                        // 「キャンセル」を押したときの処理
+                        onCancel: () {
+                        },
+                        //言語
+                        locale: LocaleType.jp,
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10,),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Checkbox(
+                        value: undecided,
+                        onChanged: (value) {
+                          setState(() {
+                            undecided = value!;
+                          });
+                        }
+                    ),
+                    const Text(
+                      '未定',
+                      style: TextStyle(fontSize: 17,),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ],
       );
-    }
-    else {
-      return const SizedBox();
+    } else if (title == '早退') {
+      return Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(5.0),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 2,
+                color: const Color(0xffb3b9ed),
+              ),
+              borderRadius: BorderRadius.circular(7),
+            ),
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              child: Text('日付：${DateFormat.yMMMd('ja').format(selectedStartDate).toString()}(${DateFormat.E('ja').format(selectedStartDate)})',
+                style: const TextStyle(
+                  fontSize: 17.0,
+                ),
+              ),
+              onPressed: () {
+                DatePicker.showDatePicker(
+                  context,
+                  // 現在の日時
+                  currentTime: selectedStartDate,
+                  // 選択できる日時の範囲
+                  minTime: DateTime(currentDate.year,currentDate.month,currentDate.day),
+                  maxTime: DateTime(2030, 12, 31),
+
+                  // ドラムロールを変化させたときの処理
+                  onChanged: (dateTime) {
+                  },
+
+                  // 「完了」を押したときの処理
+                  onConfirm: (dateTime) {
+                    setState(() {
+                      selectedStartDate = dateTime;
+                      if (selectedStartDate.isAfter(selectedEndDate)) {
+                        selectedEndDate = selectedStartDate;
+                      }
+                    });
+                  },
+
+                  // 「キャンセル」を押したときの処理
+                  onCancel: () {
+                  },
+                  //言語
+                  locale: LocaleType.jp,
+                );
+              },
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Container(
+            padding: const EdgeInsets.all(5.0),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 2,
+                color: const Color(0xffb3b9ed),
+              ),
+              borderRadius: BorderRadius.circular(7),
+            ),
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              child: Text('早退予定時刻：${DateFormat.Hm('ja').format(selectedStartDate)}',
+                style: const TextStyle(
+                  fontSize: 17.0,
+                ),
+              ),
+              onPressed: () {
+                DatePicker.showTimePicker(
+                  context,
+                  // 現在の日時
+                  currentTime: selectedStartDate,
+                  // 選択できる日時の範囲
+
+                  // ドラムロールを変化させたときの処理
+                  onChanged: (dateTime) {
+                  },
+
+                  // 「完了」を押したときの処理
+                  onConfirm: (dateTime) {
+                    setState(() {
+                      selectedStartDate = dateTime;
+                      if (selectedStartDate.isAfter(selectedEndDate)) {
+                        selectedEndDate = selectedStartDate;
+                      }
+                    });
+                  },
+
+                  // 「キャンセル」を押したときの処理
+                  onCancel: () {
+                  },
+                  //言語
+                  locale: LocaleType.jp,
+                );
+              },
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(5.0),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 2,
+                color: const Color(0xffb3b9ed),
+              ),
+              borderRadius: BorderRadius.circular(7),
+            ),
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              child: Text('開始時刻：${DateFormat.yMMMd('ja').format(selectedStartDate).toString()}(${DateFormat.E('ja').format(selectedStartDate)})ー${DateFormat.Hm('ja').format(selectedStartDate)}',
+                style: const TextStyle(
+                  fontSize: 17.0,
+                ),
+              ),
+              onPressed: () {
+                DatePicker.showDateTimePicker(
+                  context,
+                  // 現在の日時
+                  currentTime: selectedStartDate,
+                  // 選択できる日時の範囲
+                  minTime: DateTime(currentDate.year,currentDate.month,currentDate.day,0,0,0),
+                  maxTime: DateTime(2030, 12, 31,23,0,0),
+
+                  // ドラムロールを変化させたときの処理
+                  onChanged: (dateTime) {
+                  },
+
+                  // 「完了」を押したときの処理
+                  onConfirm: (dateTime) {
+                    setState(() {
+                      selectedStartDate = dateTime;
+                      if (selectedStartDate.isAfter(selectedEndDate)) {
+                        selectedEndDate = selectedStartDate;
+                      }
+                    });
+                  },
+
+                  // 「キャンセル」を押したときの処理
+                  onCancel: () {
+                  },
+                  //言語
+                  locale: LocaleType.jp,
+                );
+              },
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Container(
+            padding: const EdgeInsets.all(5.0),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 2,
+                color: const Color(0xffb3b9ed),
+              ),
+              borderRadius: BorderRadius.circular(7),
+            ),
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              child: Text('終了時刻：${DateFormat.yMMMd('ja').format(selectedEndDate).toString()}(${DateFormat.E('ja').format(selectedEndDate)})ー${DateFormat.Hm('ja').format(selectedEndDate)}',
+                style: const TextStyle(
+                  fontSize: 17.0,
+                ),
+              ),
+              onPressed: () {
+                DatePicker.showDateTimePicker(
+                  context,
+                  // 現在の日時
+                  currentTime: selectedEndDate,
+                  // 選択できる日時の範囲
+                  minTime: selectedStartDate,
+                  maxTime: DateTime(2030, 12, 31),
+
+                  // ドラムロールを変化させたときの処理
+                  onChanged: (dateTime) {
+                  },
+
+                  // 「完了」を押したときの処理
+                  onConfirm: (dateTime) {
+                    setState(() {
+                      selectedEndDate = dateTime;
+                    });
+                  },
+
+                  // 「キャンセル」を押したときの処理
+                  onCancel: () {
+                  },
+                  //言語
+                  locale: LocaleType.jp,
+                );
+              },
+            ),
+          ),
+        ],
+      );
     }
   }
 }

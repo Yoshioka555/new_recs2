@@ -16,7 +16,12 @@ class ResetPasswordPage extends StatelessWidget {
       create: (_) => ResetPasswordModel(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('パスワードリセット'),
+          backgroundColor: Colors.black,
+          title: const Text('パスワードリセット',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
@@ -25,76 +30,91 @@ class ResetPasswordPage extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        body: Center(
-          child: Consumer<ResetPasswordModel>(builder: (context, model, child) {
-            return Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+        backgroundColor: Colors.white,
+        body: Consumer<ResetPasswordModel>(builder: (context, model, child) {
+          return Stack(
+            children: [
+              Center(
+                child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      TextField(
-                        controller: model.emailController,
-                        decoration: const InputDecoration(
-                          hintText: 'Email',
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 700),
+                        child: SizedBox(
+                          //横長がウィンドウサイズの８割になる設定
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: TextField(
+                            controller: model.emailController,
+                            decoration: const InputDecoration(
+                              labelText: 'Your Email',
+                              icon: Icon(Icons.mail),
+                            ),
+                            onChanged: (text) {
+                              model.setEmail(text);
+                            },
+                          ),
                         ),
-                        onChanged: (text) {
-                          model.setEmail(text);
-                        },
                       ),
                       const SizedBox(
-                        height: 16,
+                        height: 20,
                       ),
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 250),
+                        child: SizedBox(
+                          //横長がウィンドウサイズの３割になる設定
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          height: 40,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              model.startLoading();
+                              try {
+                                await model.sendPasswordResetEmail();
+                                final snackBar = SnackBar(
+                                  backgroundColor: Colors.blue,
+                                  content: Text('${model.email}にメールを送信しました'),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                Navigator.of(context).pop();
 
-                      ElevatedButton(
-                        onPressed: () async {
-                          model.startLoading();
-                          try {
-                            await model.sendPasswordResetEmail();
-                            final snackBar = SnackBar(
-                              backgroundColor: Colors.blue,
-                              content: Text('${model.email}にメールを送信しました'),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                            Navigator.of(context).pop();
+                              } on FirebaseAuthException catch (e) {
+                                //ユーザーログインに失敗した場合
+                                if (e.code == 'user-not-found') {
+                                  error = 'ユーザーは存在しません';
+                                }
+                                else if (e.code == 'invalid-email') {
+                                  error = 'メールアドレスの形をしていません';
+                                }
+                                else {
+                                  error = 'メールを送信できません';
+                                }
 
-                          } on FirebaseAuthException catch (e) {
-                            //ユーザーログインに失敗した場合
-                            if (e.code == 'user-not-found') {
-                              error = 'ユーザーは存在しません';
-                            }
-                            else if (e.code == 'invalid-email') {
-                              error = 'メールアドレスの形をしていません';
-                            }
-                            else {
-                              error = 'メールを送信できません';
-                            }
-
-                            final snackBar = SnackBar(
-                              backgroundColor: Colors.red,
-                              content: Text(error.toString()),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          } finally {
-                            model.endLoading();
-                          }
-                        },
-                        child: const Text('送信'),
+                                final snackBar = SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text(error.toString()),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              } finally {
+                                model.endLoading();
+                              }
+                            },
+                            child: const Text('送信'),
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
-                if (model.isLoading)
-                  Container(
-                    color: Colors.black45,
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+              ),
+              if (model.isLoading)
+                Container(
+                  color: Colors.black45,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
                   ),
-              ],
-            );
-          }),
-        ),
+                ),
+            ],
+          );
+        }),
       ),
     );
   }

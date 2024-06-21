@@ -13,6 +13,14 @@ class DrawerModel extends ChangeNotifier {
   String status = '';
   String imgURL = '';
 
+  bool _isDisposed = false;
+
+  @override
+  void dispose() {
+    _isDisposed = true;  // disposeされたことを示すフラグを設定
+    super.dispose();
+  }
+
   void fetchUserList() async {
     final currentUser = FirebaseAuth.instance.currentUser;
     final uid = currentUser!.uid;
@@ -43,7 +51,9 @@ class DrawerModel extends ChangeNotifier {
       print('リクエストが失敗しました: ${response.statusCode}');
     }
 
-    notifyListeners();
+    if (!_isDisposed) {
+      notifyListeners();
+    }
   }
 
 }

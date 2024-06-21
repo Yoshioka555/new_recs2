@@ -27,7 +27,7 @@ class _EventIndexPageState extends State<EventIndexPage> {
   bool _isDisposed = false;
   int selectedMonth = DateTime.now().month;
   int selectedYear = DateTime.now().year;
-  final DateTime today = DateTime.now();
+  DateTime today = DateTime.now();
 
   CalendarHeaderStyle headerStyle(DateTime date) {
     if(date.month == 1) {
@@ -178,7 +178,7 @@ class _EventIndexPageState extends State<EventIndexPage> {
   }
 
   void _goToToday() {
-    _controller.displayDate = DateTime(today.year, today.month, today.day, 0,0,0,0,0);
+    _controller.displayDate = DateTime(today.year, today.month, 1,);
   }
 
   void _goToSelectedYearMonth(int year, int month) {
@@ -220,6 +220,7 @@ class _EventIndexPageState extends State<EventIndexPage> {
           child:  Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
+              toolbarHeight: 50.0,
               actions: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -237,7 +238,7 @@ class _EventIndexPageState extends State<EventIndexPage> {
               ),
               centerTitle: true,
               elevation: 0.0,
-              title: const Text('イベントページ',
+              title: const Text('Event Page',
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -465,7 +466,7 @@ class _EventIndexPageState extends State<EventIndexPage> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          UpdateEventPage(event: appointment,userId: model.id!, content: titleToContent(appointment.title),),
+                                          UpdateEventPage(event: appointment,content: titleToContent(appointment.title),),
                                       fullscreenDialog: true,
                                     ),
                                   );

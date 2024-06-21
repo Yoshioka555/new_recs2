@@ -38,17 +38,16 @@ class MyPage extends StatelessWidget {
           ),
         ),
         drawer: const UserDrawer(),
-        body: Center(
-          child: Consumer<MyModel>(builder: (context, model, child) {
+        body: Consumer<MyModel>(builder: (context, model, child) {
 
-            final imgURL = model.imgURL;
-            final email = model.email;
-            final name = model.name;
-            final group = model.group;
-            final grade = model.grade;
-            final status = model.status;
+          final imgURL = model.imgURL;
+          final email = model.email;
+          final name = model.name;
+          final group = model.group;
+          final grade = model.grade;
+          final status = model.status;
 
-            /*
+          /*
             final List<Widget> widgets = model.chats.map(
 
                   (room) => Card(
@@ -75,124 +74,137 @@ class MyPage extends StatelessWidget {
             ).toList();
             */
 
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+          return SingleChildScrollView(
+            child: Column(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                      color: Colors.white
-                  ),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.grey,
-                    radius: 50,
-                    backgroundImage: imgURL != '' ? Image.memory(
-                      base64Decode(imgURL),
-                      fit: BoxFit.cover,
-                      errorBuilder: (c, o, s) {
-                        return const Icon(
-                          Icons.error,
-                          color: Colors.red,
-                        );
-                      },
-                    ).image
-                    : const AssetImage('assets/images/default.png'),
-                  ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.white
-                  ),
-                  padding: const EdgeInsets.all(1),
-                  alignment: Alignment.center,
-                  child: Text(
-                    name,
-                    style: const TextStyle(
-                      fontSize: 25,
-                      color: Colors.black45,
-                    ),
-                  ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.white
-                  ),
-                  padding: const EdgeInsets.all(1),
-                  alignment: Alignment.center,
-                  child: Text(
-                    email,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: Colors.black45,
-                    ),
-                  ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.white
-                  ),
-                  padding: const EdgeInsets.all(1),
-                  alignment: Alignment.center,
-                  child: Row(
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Column(
                     children: [
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.all(5),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20),
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20),
-                            ),
-                            color: groupColor(group),
-                          ),
-                          child: Text(group),
+                      const SizedBox(height: 10,),
+                      CircleAvatar(
+                        backgroundColor: Colors.grey,
+                        radius: 50,
+                        backgroundImage: imgURL != '' ? Image.memory(
+                          base64Decode(imgURL),
+                          fit: BoxFit.cover,
+                          errorBuilder: (c, o, s) {
+                            return const Icon(
+                              Icons.error,
+                              color: Colors.red,
+                            );
+                          },
+                        ).image
+                            : const AssetImage('assets/images/default.png'),
+                      ),
+                      const SizedBox(height: 10,),
+                      Text(
+                        name,
+                        style: const TextStyle(
+                          fontSize: 25,
                         ),
                       ),
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.all(5),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20),
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20),
-                            ),
-                            color: gradeColor(grade),
-                          ),
-                          child: Text(grade),
+                      const SizedBox(height: 10,),
+                      Text(
+                        email,
+                        style: const TextStyle(
+                          fontSize: 18,
                         ),
                       ),
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.all(5),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20),
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20),
-                            ),
-                            color: statusColor(status),
+                      const SizedBox(height: 10,),
+                      ConstrainedBox(
+                        //ボタンの横長の最大値の設定
+                        constraints: const BoxConstraints(minHeight: 40,),
+                        child: SizedBox(
+                          //横長がウィンドウサイズの９割５分になる設定
+                          width: MediaQuery.of(context).size.width * 0.95,
+                          height: 40,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.all(5),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                      bottomLeft: Radius.circular(20),
+                                      bottomRight: Radius.circular(20),
+                                    ),
+                                    color: groupColor(group),
+                                  ),
+                                  child: Text(
+                                    group,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.all(5),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                      bottomLeft: Radius.circular(20),
+                                      bottomRight: Radius.circular(20),
+                                    ),
+                                    color: gradeColor(grade),
+                                  ),
+                                  child: Text(
+                                    grade,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.all(5),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                      bottomLeft: Radius.circular(20),
+                                      bottomRight: Radius.circular(20),
+                                    ),
+                                    color: statusColor(status),
+                                  ),
+                                  child: Text(
+                                    status,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          child: Text(status),
                         ),
                       ),
                     ],
                   ),
                 ),
-                //chatRoomList(model.chats, widgets),
+                /*
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  child: chatRoomList(model.chat, widgets),
+                ),
+
+                 */
               ],
-            );
-          }),
-        ),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -220,7 +232,7 @@ class MyPage extends StatelessWidget {
     if(group=='Web班') {
       return Colors.cyan;
     } else if(group=='Network班') {
-      return Colors.yellowAccent;
+      return Colors.yellow;
     } else if(group=='教員') {
       return Colors.pinkAccent;
     } else {
