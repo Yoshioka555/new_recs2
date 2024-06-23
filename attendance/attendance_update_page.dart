@@ -9,9 +9,10 @@ import 'attendance_update_model.dart';
 
 class UpdateAttendancePage extends StatefulWidget {
   final bool withDuration;
+  final int currentUserId;
   final AttendanceData attendance;
 
-  const UpdateAttendancePage({Key? key, required this.attendance, this.withDuration = false})
+  const UpdateAttendancePage({Key? key, required this.attendance, required this.currentUserId, this.withDuration = false})
       : super(key: key);
 
   @override
@@ -361,56 +362,131 @@ class _UpdateAttendancePageState extends State<UpdateAttendancePage> {
                             const SizedBox(
                               height: 15.0,
                             ),
-                            GestureDetector(
-                              onTap: () async {
+                            widget.attendance.userId == widget.currentUserId ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: GestureDetector(
+                                    onTap: () async {
 
-                                try {
-                                  //イベント追加
-                                  //await model.addAttendance(_titleController.text, selectedStartDate, selectedEndDate, _unit, _descriptionController.text, _mailSend);
-                                  if (_mailSend == true) {
-                                    //await model.sendEmail(_titleController.text, selectedStartDate, selectedEndDate, _unit, _descriptionController.text);
-                                  }
-
-                                  Navigator.of(context).pop();
-                                  const snackBar = SnackBar(
-                                    backgroundColor: Colors.green,
-                                    content: Text('イベントの編集をしました。'),
-                                  );
-                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                } catch (e) {
-                                  final snackBar = SnackBar(
-                                    backgroundColor: Colors.red,
-                                    content: Text(e.toString()),
-                                  );
-                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                }
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10,
-                                  horizontal: 40,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff6471e9),
-                                  borderRadius: BorderRadius.circular(7.0),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Color(0xff626262),
-                                      offset: Offset(0, 4),
-                                      blurRadius: 10,
-                                      spreadRadius: -3,
-                                    )
-                                  ],
-                                ),
-                                child: const Text(
-                                  'Update Event',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
+                                      try {
+                                        showDialog(
+                                            context: context,
+                                            builder: (_) => CupertinoAlertDialog(
+                                              title: const Text("削除しますか？"),
+                                              actions: [
+                                                CupertinoDialogAction(
+                                                    isDestructiveAction: true,
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                    child: const Text('Cancel')),
+                                                CupertinoDialogAction(
+                                                  child: const Text('OK'),
+                                                  onPressed: () async {
+                                                    //イベント削除
+                                                    await model.deleteEvent(widget.attendance.id);
+                                                    Navigator.of(context).pop();
+                                                    Navigator.of(context).pop();
+                                                    const snackBar = SnackBar(
+                                                      backgroundColor: Colors.green,
+                                                      content: Text('削除しました'),
+                                                    );
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  },
+                                                )
+                                              ],
+                                            ));
+                                      } catch (e) {
+                                        final snackBar = SnackBar(
+                                          backgroundColor: Colors.red,
+                                          content: Text(e.toString()),
+                                        );
+                                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 10,
+                                        horizontal: 40,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(7.0),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Colors.red,
+                                            offset: Offset(0, 4),
+                                            blurRadius: 10,
+                                            spreadRadius: -3,
+                                          )
+                                        ],
+                                      ),
+                                      child: const Text(
+                                        '削除',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: GestureDetector(
+                                    onTap: () async {
+
+                                      try {
+                                        //イベント更新
+                                        await model.updateAttendance(widget.attendance.id, _titleController.text, selectedStartDate, selectedEndDate, _descriptionController.text, _mailSend, undecided);
+                                        if (_mailSend == true) {
+                                          await model.sendEmail(_titleController.text, selectedStartDate, selectedEndDate, _descriptionController.text, undecided);
+                                        }
+                                        Navigator.of(context).pop();
+                                        const snackBar = SnackBar(
+                                          backgroundColor: Colors.green,
+                                          content: Text('イベントの編集をしました。'),
+                                        );
+                                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                      } catch (e) {
+                                        final snackBar = SnackBar(
+                                          backgroundColor: Colors.red,
+                                          content: Text(e.toString()),
+                                        );
+                                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 10,
+                                        horizontal: 40,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.circular(7.0),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Colors.green,
+                                            offset: Offset(0, 4),
+                                            blurRadius: 10,
+                                            spreadRadius: -3,
+                                          )
+                                        ],
+                                      ),
+                                      child: const Text(
+                                        '編集',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ) : const SizedBox(),
                           ],
                         ),
                       ),

@@ -403,7 +403,7 @@ class _AttendanceIndexPageMonthState extends State<AttendanceIndexPageMonth> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  UpdateAttendancePage(attendance: appointment),
+                                  UpdateAttendancePage(attendance: appointment, currentUserId: model.id!,),
                                   fullscreenDialog: true,
                             ),
                           );

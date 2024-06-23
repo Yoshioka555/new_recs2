@@ -560,6 +560,7 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                         onChanged: (value) {
                           setState(() {
                             undecided = value!;
+
                           });
                         }
                     ),

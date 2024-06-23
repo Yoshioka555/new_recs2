@@ -99,7 +99,7 @@ class UpdateAttendanceModel extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       // 成功時の処理
-      print('Event deleted successfully');
+      print('Attendance deleted successfully');
     } else {
       // エラー時の処理
       print('Failed to delete the event');
