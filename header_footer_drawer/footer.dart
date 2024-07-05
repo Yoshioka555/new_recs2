@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:labmaidfastapi/attendance/attendance_home_page.dart';
+import 'package:labmaidfastapi/chat/chatroom_index_page.dart';
 import 'package:labmaidfastapi/minutes/minutes_index_page.dart';
 
 import '../event/event_index_page.dart';
@@ -48,7 +49,7 @@ class _FooterState extends State<Footer> {
   final _routes = [
     const EventIndexPage(),
     const AttendanceHomePage(),
-    EventIndexPage(),
+    const ChatRoomListPage(),
     MinutesIndexPage(),
     const MyPage(),
   ];

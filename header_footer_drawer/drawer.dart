@@ -38,35 +38,35 @@ class UserDrawer extends StatelessWidget {
                         ),
                         const SizedBox(height: 7,),
                         Text(
-                          'UserName：${model.name}',
+                          'UserName：${model.myData?.name}',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 18,
                           ),
                         ),
                         Text(
-                          'Group：${model.group}',
+                          'Group：${model.myData?.group}',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 18,
                           ),
                         ),
                         Text(
-                          'Grade：${model.grade}',
+                          'Grade：${model.myData?.grade}',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 18,
                           ),
                         ),
                         Text(
-                          'Email：${model.email}',
+                          'Email：${model.myData?.email}',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 18,
                           ),
                         ),
                         Text(
-                          '出席状況：${model.status}',
+                          '出席状況：${model.myData?.status}',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 18,
@@ -166,7 +166,7 @@ class UserDrawer extends StatelessWidget {
                           await Navigator.of(context).push(
                             MaterialPageRoute(
                                 builder: (context) {
-                                  return EditMyPage(name: model.name, group: model.group, grade: model.grade, userImage: model.imgURL,);
+                                  return EditMyPage(myData: model.myData!,);
                                 }
                             ),
                           );

@@ -1,3 +1,4 @@
+import 'package:labmaidfastapi/domain/user_data.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import '../header_footer_drawer/footer.dart';
@@ -7,11 +8,8 @@ import 'dart:typed_data';
 import 'dart:convert';
 
 class EditMyPage extends StatefulWidget {
-  final String name;
-  final String group;
-  final String grade;
-  final String userImage;
-  const EditMyPage({Key? key, required this.name, required this.group, required this.grade, required this.userImage}) : super(key:key);
+  final UserData myData;
+  const EditMyPage({Key? key, required this.myData}) : super(key:key);
   @override
   _EditMyPageState createState() => _EditMyPageState();
 }
@@ -26,10 +24,10 @@ class _EditMyPageState extends State<EditMyPage> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.name);
-    _groupController = TextEditingController(text: widget.group);
-    _gradeController = TextEditingController(text: widget.grade);
-    _userImageController = TextEditingController(text: widget.userImage);
+    _nameController = TextEditingController(text: widget.myData.name);
+    _groupController = TextEditingController(text: widget.myData.group);
+    _gradeController = TextEditingController(text: widget.myData.grade);
+    _userImageController = TextEditingController(text: widget.myData.imgData);
   }
 
   Uint8List? imageData;
@@ -271,10 +269,10 @@ class _EditMyPageState extends State<EditMyPage> {
                             onPressed: () async {
                               model.startLoading();
                               try {
-                                await model.update(_nameController.text, _groupController.text, _gradeController.text);
+                                await model.update(_nameController.text, _groupController.text, _gradeController.text, widget.myData.id);
 
                                 if (imageData != null) {
-                                  await model.updateImage(imageData);
+                                  await model.updateImage(imageData, widget.myData.id);
                                 }
                                 //ユーザー登録
                                 Navigator.of(context).push(

@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
@@ -7,9 +6,6 @@ import 'dart:convert';
 
 class EditMyPageModel extends ChangeNotifier {
   bool isLoading = false;
-
-  String userId = '';
-  int? id;
 
   void startLoading() {
     isLoading = true;
@@ -22,33 +18,13 @@ class EditMyPageModel extends ChangeNotifier {
   }
 
   void fetchUser() async {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
-    userId = uid;
-    var uri = Uri.parse('http://localhost:8000/user_id/$userId');
-    var response = await http.get(uri);
 
-    // レスポンスのステータスコードを確認
-    if (response.statusCode == 200) {
-      // レスポンスボディをUTF-8でデコード
-      var responseBody = utf8.decode(response.bodyBytes);
-
-      // JSONデータをデコード
-      var responseData = jsonDecode(responseBody);
-
-      // 必要なデータを取得
-      id = responseData['id'];
-
-      // 取得したデータを使用する
-    } else {
-      // リクエストが失敗した場合の処理
-      print('リクエストが失敗しました: ${response.statusCode}');
-    }
 
     notifyListeners();
   }
 
   //ユーザ情報更新
-  Future update(String name, String group, String grade) async {
+  Future update(String name, String group, String grade, int id) async {
 
     if(name == ''){
       throw '名前が入力されていません。';
@@ -95,7 +71,7 @@ class EditMyPageModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future updateImage(Uint8List? userImage) async {
+  Future updateImage(Uint8List? userImage, int id) async {
 
     var uri = Uri.parse('http://localhost:8000/users/image/$id');
     final request = http.MultipartRequest('PATCH', uri);

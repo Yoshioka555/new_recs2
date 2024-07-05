@@ -4,8 +4,17 @@ import 'my_model.dart';
 import 'dart:convert';
 import '../header_footer_drawer/drawer.dart';
 
-class MyPage extends StatelessWidget {
-  const MyPage({super.key});
+class MyPage extends StatefulWidget {
+
+  const MyPage({Key? key}) : super(key: key);
+
+
+  @override
+  _MyPageState createState() => _MyPageState();
+}
+
+
+class _MyPageState extends State<MyPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +49,6 @@ class MyPage extends StatelessWidget {
         drawer: const UserDrawer(),
         body: Consumer<MyModel>(builder: (context, model, child) {
 
-          final imgURL = model.imgURL;
-          final email = model.email;
-          final name = model.name;
-          final group = model.group;
-          final grade = model.grade;
-          final status = model.status;
-
           /*
             final List<Widget> widgets = model.chats.map(
 
@@ -75,7 +77,8 @@ class MyPage extends StatelessWidget {
             */
 
           return SingleChildScrollView(
-            child: Column(
+            child: model.myData != null
+                ? Column(
               children: [
                 Align(
                   alignment: Alignment.topCenter,
@@ -85,8 +88,8 @@ class MyPage extends StatelessWidget {
                       CircleAvatar(
                         backgroundColor: Colors.grey,
                         radius: 50,
-                        backgroundImage: imgURL != '' ? Image.memory(
-                          base64Decode(imgURL),
+                        backgroundImage: model.myData!.imgData != '' ? Image.memory(
+                          base64Decode(model.myData!.imgData),
                           fit: BoxFit.cover,
                           errorBuilder: (c, o, s) {
                             return const Icon(
@@ -99,14 +102,14 @@ class MyPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 10,),
                       Text(
-                        name,
+                        model.myData!.name,
                         style: const TextStyle(
                           fontSize: 25,
                         ),
                       ),
                       const SizedBox(height: 10,),
                       Text(
-                        email,
+                        model.myData!.email,
                         style: const TextStyle(
                           fontSize: 18,
                         ),
@@ -132,10 +135,10 @@ class MyPage extends StatelessWidget {
                                       bottomLeft: Radius.circular(20),
                                       bottomRight: Radius.circular(20),
                                     ),
-                                    color: groupColor(group),
+                                    color: groupColor(model.myData!.group),
                                   ),
                                   child: Text(
-                                    group,
+                                    model.myData!.group,
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -154,10 +157,10 @@ class MyPage extends StatelessWidget {
                                       bottomLeft: Radius.circular(20),
                                       bottomRight: Radius.circular(20),
                                     ),
-                                    color: gradeColor(grade),
+                                    color: gradeColor(model.myData!.grade),
                                   ),
                                   child: Text(
-                                    grade,
+                                    model.myData!.grade,
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -176,10 +179,10 @@ class MyPage extends StatelessWidget {
                                       bottomLeft: Radius.circular(20),
                                       bottomRight: Radius.circular(20),
                                     ),
-                                    color: statusColor(status),
+                                    color: statusColor(model.myData!.status),
                                   ),
                                   child: Text(
-                                    status,
+                                    model.myData!.status,
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -202,7 +205,12 @@ class MyPage extends StatelessWidget {
 
                  */
               ],
-            ),
+            )
+                : const Center(
+                  child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(Colors.blue),
+                              ),
+                ),
           );
         }),
       ),

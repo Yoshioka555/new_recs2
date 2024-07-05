@@ -3,15 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:labmaidfastapi/domain/user_data.dart';
 
 class DrawerModel extends ChangeNotifier {
 
-  String email = '';
-  String name = '';
-  String group = '';
-  String grade = '';
-  String status = '';
-  String imgURL = '';
+  UserData? myData;
 
   bool _isDisposed = false;
 
@@ -38,12 +34,7 @@ class DrawerModel extends ChangeNotifier {
       var responseData = jsonDecode(responseBody);
 
       // 必要なデータを取得
-      email = responseData['email'].toString();
-      name = responseData['name'].toString();
-      group = responseData['group'].toString();
-      grade = responseData['grade'].toString();
-      status = responseData['status'].toString();
-      imgURL = responseData['bytes_data'].toString();
+      myData = UserData.fromJson(responseData);
 
       // 取得したデータを使用する
     } else {

@@ -11,6 +11,18 @@ class _MinutesIndexPageState extends State<MinutesIndexPage> {
   final WebSocketChannel channel = WebSocketChannel.connect(Uri.parse('ws://localhost:8000/ws'));
   final TextEditingController _controller = TextEditingController();
 
+  List<String> messages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    channel.stream.listen((message) {
+      setState(() {
+        messages.add(message);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,11 +40,15 @@ class _MinutesIndexPageState extends State<MinutesIndexPage> {
               ),
             ),
             const SizedBox(height: 24,),
-            StreamBuilder(
-              stream: channel.stream,
-              builder: (context, snapshot) {
-                return Text(snapshot.hasData ? '${snapshot.data}' : '');
-              },
+            Expanded(
+                child: ListView.builder(
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(messages[index]),
+                      );
+                    },
+                ),
             ),
           ],
         ),
@@ -48,6 +64,7 @@ class _MinutesIndexPageState extends State<MinutesIndexPage> {
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {
       channel.sink.add(_controller.text);
+      _controller.clear();
     }
   }
 
