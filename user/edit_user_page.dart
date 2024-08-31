@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import '../header_footer_drawer/footer.dart';
 import 'edit_user_model.dart';
-import '../pick_export/pick_export.dart';
+import '../pick_export/pick_image_export.dart';
 import 'dart:typed_data';
 import 'dart:convert';
 
@@ -68,7 +68,7 @@ class _EditMyPageState extends State<EditMyPage> {
                           width: MediaQuery.of(context).size.width * 0.7,
                           child: GestureDetector(
                             onTap: () async {
-                              final _imageData = await Pick().pickFile();
+                              final _imageData = await PickImage().pickImage();
                               setState(() {
                                 imageData = _imageData;
                               });

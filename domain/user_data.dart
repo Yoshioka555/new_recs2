@@ -51,3 +51,81 @@ class UserData {
   }
 
 }
+
+class GroupChatMember {
+  GroupChatMember({
+    required this.id, required this.email, required this.group, required this.grade,
+    required this.name, required this.status, required this.imgData, required this.firebaseUserId,
+    required this.fileName, required this.join,
+  });
+
+  final int id;
+  final String email;
+  final String group;
+  final String grade;
+  final String name;
+  final String status;
+  final String imgData;
+  final String firebaseUserId;
+  final String fileName;
+  bool join;
+
+  //JSONからオブジェクトを作成するファクトリメソッド
+  factory GroupChatMember.fromJson(dynamic json) {
+    return GroupChatMember(
+      id: json['id'] as int,
+      email: json['email'] as String,
+      group: json['group'] as String,
+      grade: json['grade'] as String,
+      name: json['name'] as String,
+      status: json['status'] as String,
+      imgData: json['bytes_data'] as String,
+      firebaseUserId: json['firebase_user_id'] as String,
+      fileName: json['file_name'] as String,
+      join: true,
+    );
+  }
+
+}
+
+class GroupChatUserData {
+  GroupChatUserData({
+    required this.id, required this.email, required this.group, required this.grade,
+    required this.name, required this.status, required this.imgData, required this.firebaseUserId,
+    required this.fileName, required this.joinedDate, required this.leaveDate, required this.join,
+  });
+
+  final int id;
+  final String email;
+  final String group;
+  final String grade;
+  final String name;
+  final String status;
+  final String imgData;
+  final String firebaseUserId;
+  final String fileName;
+  final DateTime? joinedDate;
+  final DateTime? leaveDate;
+  final bool join;
+
+  //JSONからオブジェクトを作成するファクトリメソッド
+  factory GroupChatUserData.fromJson(dynamic json) {
+    return GroupChatUserData(
+      id: json['id'] as int,
+      email: json['email'] as String,
+      group: json['group'] as String,
+      grade: json['grade'] as String,
+      name: json['name'] as String,
+      status: json['status'] as String,
+      imgData: json['bytes_data'] as String,
+      firebaseUserId: json['firebase_user_id'] as String,
+      fileName: json['file_name'] as String,
+      joinedDate: json['joined_date'] != null ? DateTime.parse(json['joined_date'] as String) : null,  // nullの場合はnullを返す
+      leaveDate: json['leave_date'] != null
+          ? DateTime.parse(json['leave_date'] as String)
+          : null,  // nullの場合はnullを返す
+      join: json['join'] as bool,
+    );
+  }
+
+}

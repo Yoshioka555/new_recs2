@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import '../pick_export/pick_export.dart';
+import '../pick_export/pick_image_export.dart';
 
 import '../header_footer_drawer/footer.dart';
 import 'register_model.dart';
@@ -76,7 +76,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: GestureDetector(
                           onTap: () async {
                             //getImageFromGallery();
-                            final _imageData = await Pick().pickFile();
+                            final _imageData = await PickImage().pickImage();
                             setState(() {
                               imageData = _imageData;
                             });

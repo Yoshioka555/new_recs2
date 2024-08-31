@@ -1,6 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:labmaidfastapi/chat/chat_room_info_page.dart';
 import 'package:labmaidfastapi/chat/pdf_viewer.dart';
 import 'package:labmaidfastapi/domain/chat_data.dart';
 import 'package:labmaidfastapi/domain/user_data.dart';
@@ -11,28 +12,52 @@ import 'package:path/path.dart' as path;
 
 import '../pick_export/pick_image_export.dart';
 
-class PrivateChatPage extends StatefulWidget {
-  final int privateChatroomId;
-  final UserData userData;
+class GroupChatPage extends StatefulWidget {
+  final GroupChatRoomData groupChatRoomData;
   final UserData myData;
-  const PrivateChatPage({
+  final List<GroupChatUserData> groupUsers;
+  const GroupChatPage({
     Key? key,
-    required this.privateChatroomId,
-    required this.userData,
+    required this.groupChatRoomData,
     required this.myData,
+    required this.groupUsers,
   }) : super(key: key);
 
   @override
-  State<PrivateChatPage> createState() => _PrivateChatPageState();
+  State<GroupChatPage> createState() => _GroupChatPageState();
 }
 
-class _PrivateChatPageState extends State<PrivateChatPage> {
+class _GroupChatPageState extends State<GroupChatPage> {
   final ScrollController _scrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();
   bool _isExpanded = false;
   final TextEditingController _messageController = TextEditingController();
   late WebSocketChannel _channel;
-  final List<PrivateMessageData> _messages = [];
+  final List<GroupMessageData> _messages = [];
+
+  List<GroupChatUserData> groupChatUsers = [];
+
+  Future getGroupChatUsers(int groupChatRoomId) async {
+    var uri = Uri.parse('http://localhost:8000/group_chat_room_users/$groupChatRoomId');
+
+    // GETリクエストを送信
+    var response = await http.get(uri);
+
+    // レスポンスのステータスコードを確認
+    if (response.statusCode == 200) {
+      // レスポンスボディをUTF-8でデコード
+      var responseBody = utf8.decode(response.bodyBytes);
+      // JSONデータをデコード
+      final List<dynamic> body = jsonDecode(responseBody);
+
+      // 必要なデータを取得
+      groupChatUsers = body.map((dynamic json) => GroupChatUserData.fromJson(json)).toList();
+
+    } else {
+      // リクエストが失敗した場合の処理
+      print('リクエストが失敗しました: ${response.statusCode}');
+    }
+  }
 
   Future<void> _getImageFromGallery() async {
     final pickedImage = await PickImage().pickImage();
@@ -103,14 +128,14 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
 
   Future<void> _fetchMessageHistory() async {
     final response = await http.get(
-      Uri.parse('http://localhost:8000/private_messages/${widget.privateChatroomId}'),
+      Uri.parse('http://localhost:8000/group_messages/${widget.groupChatRoomData.id}'),
     );
 
     if (response.statusCode == 200) {
       var responseBody = utf8.decode(response.bodyBytes);
       // JSONデータをデコード
       final List<dynamic> body = jsonDecode(responseBody);
-      final List<PrivateMessageData> fetchedMessages = body.map((message) => PrivateMessageData.fromJson(message)).toList();
+      final List<GroupMessageData> fetchedMessages = body.map((message) => GroupMessageData.fromJson(message)).toList();
 
       setState(() {
         _messages.addAll(fetchedMessages);
@@ -124,12 +149,12 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
 
   void _connectWebSocket() {
     _channel = WebSocketChannel.connect(
-      Uri.parse('ws://localhost:8000/ws_private_message/${widget.privateChatroomId}/${widget.myData.id}'),
+      Uri.parse('ws://localhost:8000/ws_group_message/${widget.groupChatRoomData.id}/${widget.myData.id}'),
     );
     _channel.stream.listen((message) {
       final decodedMessage = json.decode(message);
       if (decodedMessage['type'] == 'broadcast') {
-        final newMessage = PrivateMessageData.fromJson(json.decode(decodedMessage['message']));
+        final newMessage = GroupMessageData.fromJson(json.decode(decodedMessage['message']));
         setState(() {
           _messages.add(newMessage);
           _scrollToBottom();
@@ -164,14 +189,26 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        elevation: 0,
-        title: Text(widget.userData.name),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
         backgroundColor: Colors.orange,
+        centerTitle: true,
+        elevation: 0.0,
+        title: Text(widget.groupChatRoomData.name,
+          style: const TextStyle(color: Colors.white),
+        ),
         actions: [
           IconButton(
             onPressed: () async {
-
+              await getGroupChatUsers(widget.groupChatRoomData.id);
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) {
+                      return ChatRoomInfo(groupChatRoomData: widget.groupChatRoomData, groupChatUsers: groupChatUsers, myData: widget.myData);
+                    }
+                ),
+              );
             },
             icon: const Icon(Icons.info),
           ),
@@ -196,7 +233,8 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
                 itemBuilder: (context, index) {
                   final message = _messages[index];
                   final isMyMessage = message.userId == widget.myData.id;
-                  final userData = isMyMessage ? widget.myData : widget.userData;
+                  // グループ内での送信者情報を取得
+                  final userData = widget.groupUsers.firstWhere((user) => user.id == message.userId);
 
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
@@ -249,31 +287,29 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
                                     message.imgData == '' && message.fileData == ''
                                         ? Text(message.content)
                                         : message.fileData == ''
-                                        ? Container(
-                                            child: Image.memory(
-                                              base64Decode(message.imgData),
-                                              fit: BoxFit.cover,
-                                              errorBuilder: (context, error, stackTrace) {
-                                                return const Icon(Icons.error);
-                                              },
-                                            ),
+                                        ? Image.memory(
+                                          base64Decode(message.imgData),
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return const Icon(Icons.error);
+                                          },
                                         )
                                         : GestureDetector(
-                                            onTap: () async {
-                                              await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => PdfViewScreen(
-                                                        pdfData: message.fileData,
-                                                        pdfName: message.fileName,
-                                                    ),
-                                                ),
-                                              );
-                                            },
-                                            child: ListTile(
-                                              leading: Icon(switchIcon(message.fileName)),
-                                              title: Text(message.fileName),
+                                      onTap: () async {
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PdfViewScreen(
+                                              pdfData: message.fileData,
+                                              pdfName: message.fileName,
                                             ),
+                                          ),
+                                        );
+                                      },
+                                      child: ListTile(
+                                        leading: Icon(switchIcon(message.fileName)),
+                                        title: Text(message.fileName),
+                                      ),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(

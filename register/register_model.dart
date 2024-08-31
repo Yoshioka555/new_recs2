@@ -123,7 +123,7 @@ class RegisterModel extends ChangeNotifier {
         if (userImage == null) {
           imageBytes = await loadImageBytes(imagePath);
         } else {
-          imageBytes = await userImage;
+          imageBytes = userImage;
         }
 
         Map<String, String> headers = {"Content-type": "multipart/form-data"};

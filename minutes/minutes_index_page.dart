@@ -8,7 +8,7 @@ class MinutesIndexPage extends StatefulWidget {
 }
 
 class _MinutesIndexPageState extends State<MinutesIndexPage> {
-  final WebSocketChannel channel = WebSocketChannel.connect(Uri.parse('ws://localhost:8000/ws'));
+  final WebSocketChannel channel = WebSocketChannel.connect(Uri.parse('ws://localhost:8000/ws_message/2'));
   final TextEditingController _controller = TextEditingController();
 
   List<String> messages = [];
@@ -16,11 +16,7 @@ class _MinutesIndexPageState extends State<MinutesIndexPage> {
   @override
   void initState() {
     super.initState();
-    channel.stream.listen((message) {
-      setState(() {
-        messages.add(message);
-      });
-    });
+
   }
 
   @override
@@ -41,14 +37,20 @@ class _MinutesIndexPageState extends State<MinutesIndexPage> {
             ),
             const SizedBox(height: 24,),
             Expanded(
-                child: ListView.builder(
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(messages[index]),
-                      );
-                    },
-                ),
+              child: StreamBuilder(
+                  stream: channel.stream,
+                  builder: (context, snapshot){
+                    if(snapshot.hasData){
+                      messages.add(snapshot.data.toString());
+                    }
+                    return ListView.builder(
+                        itemCount: messages.length,
+                        itemBuilder: (context,index){
+                          return ListTile(
+                            title: Text(messages[index]),
+                          );
+                        });
+                  }),
             ),
           ],
         ),
