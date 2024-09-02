@@ -275,12 +275,12 @@ class _EditMyPageState extends State<EditMyPage> {
                                   await model.updateImage(imageData, widget.myData.id);
                                 }
                                 //ユーザー登録
-                                Navigator.of(context).push(
+                                Navigator.pushAndRemoveUntil(
+                                  context,
                                   MaterialPageRoute(
-                                      builder: (context) {
-                                        return const Footer(pageNumber: 3);
-                                      }
-                                  ),
+                                      builder: (context) =>
+                                      const Footer(pageNumber: 5)),
+                                      (route) => false,
                                 );
                               } catch (error) {
                                 final snackBar = SnackBar(

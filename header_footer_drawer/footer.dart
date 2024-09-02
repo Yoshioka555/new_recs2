@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:labmaidfastapi/attendance/attendance_home_page.dart';
 import 'package:labmaidfastapi/chat/chatroom_index_page.dart';
+import 'package:labmaidfastapi/location/member_location.dart';
 import 'package:labmaidfastapi/minutes/minutes_index_page.dart';
 
-import '../event/event_index_page.dart';
+import '../attendance/attendance_page_responsive.dart';
+import '../event/event_responsive_page.dart';
 import '../user/my_page.dart';
 
 class Footer extends StatefulWidget {
@@ -25,6 +26,7 @@ class _FooterState extends State<Footer> {
     Icons.groups,
     Icons.chat,
     Icons.edit_note,
+    Icons.location_pin,
     Icons.account_circle,
   ];
 
@@ -34,6 +36,7 @@ class _FooterState extends State<Footer> {
     '出席管理',
     'チャット',
     '議事録',
+    '位置情報',
     'マイページ',
   ];
 
@@ -43,14 +46,16 @@ class _FooterState extends State<Footer> {
     Colors.pinkAccent,
     Colors.orange,
     Colors.blue,
+    Colors.teal,
     Colors.lightGreen,
   ];
 
   final _routes = [
-    const EventIndexPage(),
-    const AttendanceHomePage(),
+    const EventPageTop(),
+    const AttendancePageTop(),
     const ChatRoomListPage(),
-    MinutesIndexPage(),
+    const MemoListPage(),
+    const MemberLocation(),
     const MyPage(),
   ];
 

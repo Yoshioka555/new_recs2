@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
 
 import '../header_footer_drawer/footer.dart';
 import '../register/register_page.dart';
@@ -90,52 +92,45 @@ class LoginPage extends StatelessWidget {
                             constraints: const BoxConstraints(maxWidth: 250),
                             child: SizedBox(
                               //横長がウィンドウサイズの３割になる設定
-                              width: MediaQuery.of(context).size.width * 0.3,
+                              width: MediaQuery.of(context).size.width * 0.5,
                               height: 40,
-                              child: ElevatedButton(
+                              //変更点
+                              //Googleのボタンになる
+                              child: SignInButton(
+                                Buttons.Google,
                                 onPressed: () async {
                                   model.startLoading();
                                   //追加の処理
                                   try {
                                     await model.login();
-                                    //ユーザー登録
-                                    Navigator.of(context).push(
+                                    //現在の画面をナビゲーションスタックから取り除き、新しい画面をプッシュできる
+                                    Navigator.pushReplacement(
+                                      context,
                                       MaterialPageRoute(
-                                        builder: (context) {
-                                          return const Footer(pageNumber: 0);
-                                        },
-                                      ),
+                                          builder: (context) =>
+                                          const Footer(pageNumber: 0)),
                                     );
-
                                   } on FirebaseAuthException catch (e) {
                                     //ユーザーログインに失敗した場合
                                     if (e.code == 'user-not-found') {
                                       error = 'ユーザーは存在しません';
-                                    }
-                                    else if (e.code == 'invalid-email') {
+                                    } else if (e.code == 'invalid-email') {
                                       error = 'メールアドレスの形をしていません';
-                                    }
-                                    else if (e.code == 'wrong-password') {
+                                    } else if (e.code == 'wrong-password') {
                                       error = 'パスワードが間違っています';
-                                    }
-                                    else {
+                                    } else {
                                       error = 'ログインエラー';
                                     }
-
                                     final snackBar = SnackBar(
                                       backgroundColor: Colors.red,
                                       content: Text(error.toString()),
                                     );
-                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
                                   } finally {
                                     model.endLoading();
                                   }
                                 },
-                                child: const Text('ログイン',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                  ),
-                                ),
                               ),
                             ),
                           ),

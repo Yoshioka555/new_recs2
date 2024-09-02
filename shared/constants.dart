@@ -5,5 +5,9 @@ class Constants {
   static String projectId = 'labmaid-fastapi-auth';
 }
 
+class BreakPoints {
+  static const double web = 800;
+}
+
 
 

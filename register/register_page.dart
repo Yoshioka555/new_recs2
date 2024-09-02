@@ -329,12 +329,13 @@ class _RegisterPageState extends State<RegisterPage> {
                               try {
                                 await model.signUp(imageData);
                                 //ユーザー登録
-                                Navigator.of(context).push(
+                                //スタック内のすべての画面を削除し、新しい画面に遷移できる
+                                Navigator.pushAndRemoveUntil(
+                                  context,
                                   MaterialPageRoute(
-                                      builder: (context) {
-                                        return const Footer(pageNumber: 0);
-                                      }
-                                  ),
+                                      builder: (context) =>
+                                      const Footer(pageNumber: 0)),
+                                      (route) => false,
                                 );
                               } on FirebaseAuthException catch (e) {
                                 //ユーザー登録に失敗した場合

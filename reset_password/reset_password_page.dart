@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../login/login_page.dart';
 import 'reset_password_model.dart';
 
 
@@ -74,7 +75,12 @@ class ResetPasswordPage extends StatelessWidget {
                                   content: Text('${model.email}にメールを送信しました'),
                                 );
                                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                Navigator.of(context).pop();
+                                //現在の画面をナビゲーションスタックから取り除き、新しい画面をプッシュできる
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const LoginPage()),
+                                );
 
                               } on FirebaseAuthException catch (e) {
                                 //ユーザーログインに失敗した場合

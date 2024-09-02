@@ -98,12 +98,12 @@ class _EmailResetPageState extends State<EmailResetPage> {
                                 await model.updateUserEmail();
 
                                 FirebaseAuth.instance.signOut();
-                                Navigator.of(context).push(
+                                Navigator.pushAndRemoveUntil(
+                                  context,
                                   MaterialPageRoute(
-                                      builder: (context) {
-                                        return const LoginPage();
-                                      }
-                                  ),
+                                      builder: (context) =>
+                                      const LoginPage()),
+                                      (route) => false,
                                 );
                                 const snackBar = SnackBar(
                                   backgroundColor: Colors.green,

@@ -3,6 +3,7 @@ import 'package:labmaidfastapi/attendance/attendance_create_page.dart';
 import 'package:labmaidfastapi/attendance/attendance_index_page_day.dart';
 import 'package:labmaidfastapi/attendance/attendance_index_page_month.dart';
 
+import '../gemini/gemini_page.dart';
 import '../header_footer_drawer/drawer.dart';
 import 'attendance_index_page_week.dart';
 import 'attendance_management_page.dart';
@@ -29,13 +30,15 @@ class _AttendanceHomePageState extends State<AttendanceHomePage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: IconButton(
-                  icon: const Icon(Icons.timer),
-                  onPressed: () async {
-
-                  }
+                icon: const Icon(Icons.psychology_alt),
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const GeminiPage()),
+                  );
+                },
               ),
             ),
-
           ],
           iconTheme: const IconThemeData(
             color: Colors.white,

@@ -6,6 +6,7 @@ import 'package:labmaidfastapi/event/event_create_page.dart';
 import 'package:labmaidfastapi/event/event_update_page.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:provider/provider.dart';
+import '../gemini/gemini_page.dart';
 import '../header_footer_drawer/drawer.dart';
 import 'event_index_model.dart';
 
@@ -225,10 +226,13 @@ class _EventIndexPageState extends State<EventIndexPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: IconButton(
-                    icon: const Icon(Icons.timer),
+                    icon: const Icon(Icons.psychology_alt),
                     onPressed: () async {
-
-                    }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const GeminiPage()),
+                      );
+                    },
                   ),
                 ),
               ],

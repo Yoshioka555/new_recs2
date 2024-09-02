@@ -53,8 +53,17 @@ class MyApp extends StatelessWidget {
       ],
       locale: const Locale('ja'), // デフォルトロケールを日本語に設定
       title: 'Flutter Demo', // アプリのタイトル
-      debugShowCheckedModeBanner: false, // デバッグモードのバナーを非表示
-      theme: ThemeData.light(), // テーマをライトテーマに設定
+      debugShowCheckedModeBanner: false,
+      // デバッグモードのバナーを非表示
+      //テーマを白にして、マテリアルデザイン３を適応しています
+      //テキストエラーや背景色を設定しなくても、自動的にいい感じの色味にしてくれる
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.white,
+        ),
+        //MaterialDesign3
+        useMaterial3: true,
+      ),
       scrollBehavior: const ScrollBehavior().copyWith(
         // スクロールデバイスの設定
         dragDevices: {
