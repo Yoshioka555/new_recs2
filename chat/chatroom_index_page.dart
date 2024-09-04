@@ -6,6 +6,7 @@ import 'package:labmaidfastapi/chat/group_chat_page.dart';
 import 'package:labmaidfastapi/chat/private_chat_page.dart';
 import 'package:provider/provider.dart';
 import '../domain/chat_data.dart';
+import '../door_status/door_status_appbar.dart';
 import '../header_footer_drawer/drawer.dart';
 import 'chatroom_index_model.dart';
 import 'create_group_chat_room_page.dart';
@@ -71,16 +72,13 @@ class _ChatRoomListPage extends State<ChatRoomListPage> {
                 ),
               ),
             ],
+            backgroundColor: Colors.orange,
             iconTheme: const IconThemeData(
               color: Colors.white,
             ),
-            backgroundColor: Colors.orange,
-            centerTitle: true,
+            centerTitle: false,
             elevation: 0.0,
-            title: const Text(
-              'チャット',
-              style: TextStyle(color: Colors.white),
-            ),
+            title: const DoorStatusAppbar(),
             bottom: const TabBar(
               tabs: <Tab>[
                 Tab(text: '個人',),

@@ -21,7 +21,7 @@ class _EmailResetPageState extends State<EmailResetPage> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.lightGreen,
+          backgroundColor: Colors.lightGreen.shade700,
           title: const Text('Email変更',
             style: TextStyle(
               color: Colors.white,

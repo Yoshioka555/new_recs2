@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../door_status/door_status_appbar.dart';
+import '../gemini/gemini_chat_page.dart';
 import 'my_model.dart';
 import 'dart:convert';
 import '../header_footer_drawer/drawer.dart';
@@ -27,24 +29,24 @@ class _MyPageState extends State<MyPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: IconButton(
-                  icon: const Icon(Icons.timer),
-                  onPressed: () async {
-
-                  }
+                icon: const Icon(Icons.psychology_alt),
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const GeminiChatPage()),
+                  );
+                },
               ),
             ),
           ],
-          backgroundColor: Colors.lightGreen,
+          backgroundColor: Colors.lightGreen.shade700,
           iconTheme: const IconThemeData(
             color: Colors.white,
           ),
-          centerTitle: true,
+          centerTitle: false,
           elevation: 0.0,
-          title: const Text('My Page',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
+          title: const DoorStatusAppbar(),
         ),
         drawer: const UserDrawer(),
         body: Consumer<MyModel>(builder: (context, model, child) {

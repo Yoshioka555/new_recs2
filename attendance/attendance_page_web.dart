@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:labmaidfastapi/attendance/attendance_home_page_web.dart';
 import 'package:labmaidfastapi/attendance/attendance_management_page_web.dart';
+import 'package:labmaidfastapi/door_status/door_status_appbar.dart';
 import '../gemini/gemini_page.dart';
 import '../header_footer_drawer/drawer.dart';
 import 'attendance_create_page_web.dart';
-import 'attendance_index_page_month.dart';
 
 //変更点
 //新規作成
@@ -18,17 +19,12 @@ class AttendancePageWeb extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.blue[100],
-        centerTitle: false,
-        title: const Text(
-          "Create Attendance",
-          style: TextStyle(
-            color: Color(0xff626262),
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-          ),
+        backgroundColor: Colors.pink.shade200,
+        iconTheme: const IconThemeData(
+          color: Colors.white,
         ),
-
+        centerTitle: false,
+        title: const DoorStatusAppbar(),
         //Gemini AI Page への遷移
         //仮でここに置いています
         actions: [
@@ -53,7 +49,7 @@ class AttendancePageWeb extends StatelessWidget {
           //Web用の予定追加ページ
           const Expanded(child: CreateAttendancePageWeb()),
           //カレンダーは月表示のみ
-          const Expanded(child: AttendanceIndexPageMonth()),
+          const Expanded(child: AttendanceHomePageWeb()),
           //出席状況の常時表示UI
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.1,

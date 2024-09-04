@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:intl/intl.dart';
+import 'package:labmaidfastapi/header_footer_drawer/footer.dart';
 import 'package:provider/provider.dart';
 import 'attendance_create_model.dart';
 
@@ -66,22 +67,6 @@ class _CreateAttendancePageWebState extends State<CreateAttendancePageWeb> {
     return ChangeNotifierProvider<CreateAttendanceModel>(
       create: (_) => CreateAttendanceModel()..fetchUser(),
       child: Scaffold(
-        /*
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          centerTitle: false,
-          title: const Text(
-            "Create New Attendance",
-            style: TextStyle(
-              color: Color(0xff626262),
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        drawer: const UserDrawer(),
-        */
         body: Consumer<CreateAttendanceModel>(builder: (context, model, child) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -392,7 +377,11 @@ class _CreateAttendancePageWebState extends State<CreateAttendancePageWeb> {
                                             undecided);
                                       }
 
-                                      Navigator.of(context).pop();
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => const Footer(pageNumber: 1)),
+                                      );
                                       const snackBar = SnackBar(
                                         backgroundColor: Colors.green,
                                         content: Text('イベントの登録をしました。'),
@@ -580,7 +569,7 @@ class _CreateAttendancePageWebState extends State<CreateAttendancePageWeb> {
                 width: 10,
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.3,
+                width: MediaQuery.of(context).size.width * 0.1,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,

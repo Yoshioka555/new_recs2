@@ -3,6 +3,7 @@ import 'package:labmaidfastapi/attendance/attendance_create_page.dart';
 import 'package:labmaidfastapi/attendance/attendance_index_page_day.dart';
 import 'package:labmaidfastapi/attendance/attendance_index_page_month.dart';
 
+import '../door_status/door_status_appbar.dart';
 import '../gemini/gemini_page.dart';
 import '../header_footer_drawer/drawer.dart';
 import 'attendance_index_page_week.dart';
@@ -43,15 +44,10 @@ class _AttendanceHomePageState extends State<AttendanceHomePage> {
           iconTheme: const IconThemeData(
             color: Colors.white,
           ),
-          backgroundColor: Colors.pinkAccent,
+          backgroundColor: Colors.pink.shade200,
           centerTitle: true,
           elevation: 0.0,
-          title: const Text(
-              'Attendance Management',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
+          title: const DoorStatusAppbar(),
           bottom: const TabBar(
             tabs: <Tab>[
               Tab(text: 'Member',),

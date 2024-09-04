@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../domain/attendance_data.dart';
+import '../header_footer_drawer/footer.dart';
 import 'attendance_update_model.dart';
 
 class UpdateAttendancePage extends StatefulWidget {
@@ -65,7 +66,7 @@ class _UpdateAttendancePageState extends State<UpdateAttendancePage> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: Colors.pink.shade200,
           centerTitle: false,
           leading: IconButton(
             onPressed: () {
@@ -99,6 +100,9 @@ class _UpdateAttendancePageState extends State<UpdateAttendancePage> {
                         width: MediaQuery.of(context).size.width * 0.85,
                         child: Column(
                           children: [
+                            const SizedBox(
+                              height: 20,
+                            ),
                             Container(
                               padding: const EdgeInsets.all(5.0),
                               width: double.infinity,
@@ -387,8 +391,11 @@ class _UpdateAttendancePageState extends State<UpdateAttendancePage> {
                                                   onPressed: () async {
                                                     //イベント削除
                                                     await model.deleteEvent(widget.attendance.id);
-                                                    Navigator.of(context).pop();
-                                                    Navigator.of(context).pop();
+                                                    Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) => const Footer(pageNumber: 1)),
+                                                    );
                                                     const snackBar = SnackBar(
                                                       backgroundColor: Colors.green,
                                                       content: Text('削除しました'),
@@ -444,7 +451,11 @@ class _UpdateAttendancePageState extends State<UpdateAttendancePage> {
                                         if (_mailSend == true) {
                                           await model.sendEmail(_titleController.text, selectedStartDate, selectedEndDate, _descriptionController.text, undecided);
                                         }
-                                        Navigator.of(context).pop();
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => const Footer(pageNumber: 1)),
+                                        );
                                         const snackBar = SnackBar(
                                           backgroundColor: Colors.green,
                                           content: Text('イベントの編集をしました。'),

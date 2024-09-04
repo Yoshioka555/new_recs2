@@ -43,7 +43,7 @@ class _MainTextPageState extends State<MainTextPage> {
               Navigator.pop(context);
             },
           ),
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.blue.shade800,
           iconTheme: const IconThemeData(
             color: Colors.white,
           ),

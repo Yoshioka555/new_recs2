@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../domain/memo_data.dart';
+import '../door_status/door_status_appbar.dart';
 import '../gemini/gemini_page.dart';
 import '../header_footer_drawer/drawer.dart';
 import 'minutes_add_page.dart';
@@ -35,17 +36,13 @@ class MemoListPage extends StatelessWidget {
               ),
             ),
           ],
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.blue.shade800,
           iconTheme: const IconThemeData(
             color: Colors.white,
           ),
-          centerTitle: true,
+          centerTitle: false,
           elevation: 0.0,
-          title: const Text('議事録',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
+          title: const DoorStatusAppbar(),
         ),
         drawer: const UserDrawer(),
         body: Consumer<MemoListModel>(builder: (context, model, child) {

@@ -55,7 +55,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: Colors.purple[200],
           centerTitle: false,
           leading: IconButton(
             onPressed: () {
@@ -89,6 +89,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         width: MediaQuery.of(context).size.width * 0.85,
                         child: Column(
                           children: [
+                            const SizedBox(
+                              height: 20,
+                            ),
                             Container(
                               padding: const EdgeInsets.all(5.0),
                               width: double.infinity,

@@ -39,7 +39,7 @@ class _EditMyPageState extends State<EditMyPage> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.lightGreen,
+          backgroundColor: Colors.lightGreen.shade700,
           title: const Text('アカウント情報変更',
             style: TextStyle(
               color: Colors.white,

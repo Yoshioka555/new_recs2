@@ -38,14 +38,24 @@ class _AddMemoPageState extends State<AddMemoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('議事録を追加'),
-        backgroundColor: Colors.black,
+        title: const Text(
+          '議事録を追加',
+          style: TextStyle(
+            color: Colors.white
+          ),
+        ),
+        backgroundColor: Colors.blue.shade800,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
             Navigator.of(context).pop(false);
           },
         ),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        centerTitle: true,
+        elevation: 0.0,
       ),
       body: Center(
           child: Padding(

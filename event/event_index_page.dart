@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 import 'package:labmaidfastapi/domain/event_data.dart';
+import 'package:labmaidfastapi/door_status/door_status_appbar.dart';
 import 'package:labmaidfastapi/event/event_create_page.dart';
 import 'package:labmaidfastapi/event/event_update_page.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -242,11 +243,7 @@ class _EventIndexPageState extends State<EventIndexPage> {
               ),
               centerTitle: true,
               elevation: 0.0,
-              title: const Text('Event Page',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
+              title: const DoorStatusAppbar(),
               bottom: const TabBar(
                 tabs: <Tab>[
                   Tab(text: 'Month',),

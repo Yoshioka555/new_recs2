@@ -4,6 +4,7 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../header_footer_drawer/footer.dart';
 import 'attendance_create_model.dart';
 
 class CreateAttendancePage extends StatefulWidget {
@@ -61,7 +62,7 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: Colors.pink.shade200,
           centerTitle: false,
           leading: IconButton(
             onPressed: () {
@@ -95,6 +96,9 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                         width: MediaQuery.of(context).size.width * 0.85,
                         child: Column(
                           children: [
+                            const SizedBox(
+                              height: 20,
+                            ),
                             Container(
                               padding: const EdgeInsets.all(5.0),
                               width: double.infinity,
@@ -368,7 +372,11 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                                     await model.sendEmail(_titleController.text, selectedStartDate, selectedEndDate, _descriptionController.text, undecided);
                                   }
 
-                                  Navigator.of(context).pop();
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const Footer(pageNumber: 1)),
+                                  );
                                   const snackBar = SnackBar(
                                     backgroundColor: Colors.green,
                                     content: Text('イベントの登録をしました。'),

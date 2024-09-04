@@ -67,7 +67,7 @@ class _MemoListShow extends State<MemoListShow> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blue.shade800,
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),

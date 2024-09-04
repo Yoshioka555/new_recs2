@@ -12,7 +12,7 @@ class AttendancePageTop extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ResponsiveWidget(
+    return const ResponsiveWidget(
       //従来通りのUI
       mobileWidget: AttendanceHomePage(),
       //Web用のUI

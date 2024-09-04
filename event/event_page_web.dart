@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:labmaidfastapi/door_status/door_status_appbar.dart';
 import '../attendance/attendance_management_page_web.dart';
 import '../gemini/gemini_page.dart';
 import '../header_footer_drawer/drawer.dart';
@@ -18,15 +19,11 @@ class EventPageWeb extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.green[100],
+        backgroundColor: Colors.purple[200],
         centerTitle: false,
-        title: const Text(
-          "Create Event",
-          style: TextStyle(
-            color: Color(0xff626262),
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-          ),
+        title: const DoorStatusAppbar(),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
         ),
         actions: [
           Padding(
