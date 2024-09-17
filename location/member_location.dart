@@ -59,8 +59,7 @@ class MemberLocation extends StatelessWidget {
                           color: Colors.white,
                           border: Border.all(color: Colors.black),
                         ),
-                        child: const Center(
-                            child: FittedBox(child: Text('プロジェクター'))),
+                        child: const Center(child: FittedBox(child: Text('プロジェクター'))),
                       ),
                     ),
                     // 流し
