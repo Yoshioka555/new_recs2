@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
-import 'package:labmaidfastapi/domain/event_data.dart';
-import 'package:labmaidfastapi/door_status/door_status_appbar.dart';
-import 'package:labmaidfastapi/event/event_create_page.dart';
-import 'package:labmaidfastapi/event/event_update_page.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:provider/provider.dart';
+import '../domain/event_data.dart';
+import '../door_status/door_status_appbar.dart';
+import '../gemini/gemini_chat_page.dart';
 import '../gemini/gemini_page.dart';
 import '../header_footer_drawer/drawer.dart';
+import 'event_create_page.dart';
 import 'event_index_model.dart';
+import 'event_update_page.dart';
 
 class EventIndexPage extends StatefulWidget {
 
@@ -220,7 +221,6 @@ class _EventIndexPageState extends State<EventIndexPage> {
       child: ChangeNotifierProvider<EventIndexModel>(
           create: (_) => EventIndexModel()..fetchEvent(),
           child:  Scaffold(
-            backgroundColor: Colors.white,
             appBar: AppBar(
               toolbarHeight: 50.0,
               actions: [
@@ -231,16 +231,16 @@ class _EventIndexPageState extends State<EventIndexPage> {
                     onPressed: () async {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const GeminiPage()),
+                        MaterialPageRoute(builder: (context) => const GeminiChatPage()),
                       );
                     },
                   ),
                 ),
               ],
-              backgroundColor: Colors.purple[200],
-              iconTheme: const IconThemeData(
-                color: Colors.white,
-              ),
+              //変更点
+              //色の統一
+              backgroundColor: Colors.purple[100],
+              //アイコンの色設定を削除
               centerTitle: true,
               elevation: 0.0,
               title: const DoorStatusAppbar(),
@@ -254,8 +254,9 @@ class _EventIndexPageState extends State<EventIndexPage> {
             ),
             drawer: const UserDrawer(),
             floatingActionButton: FloatingActionButton(
-              backgroundColor: Colors.amber
-              ,
+              //変更点
+              //色の統一
+              backgroundColor: Colors.purple[200],
               onPressed: () async {
                 //画面遷移
                 await Navigator.push(

@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:labmaidfastapi/chat/delete_group_chat_room_page.dart';
-import 'package:labmaidfastapi/chat/group_chat_page.dart';
-import 'package:labmaidfastapi/chat/private_chat_page.dart';
+import 'package:new_labmaid/chat/private_chat_page.dart';
 import 'package:provider/provider.dart';
 import '../domain/chat_data.dart';
 import '../door_status/door_status_appbar.dart';
@@ -11,6 +9,9 @@ import '../header_footer_drawer/drawer.dart';
 import 'chatroom_index_model.dart';
 import 'create_group_chat_room_page.dart';
 import 'package:http/http.dart' as http;
+
+import 'delete_group_chat_room_page.dart';
+import 'group_chat_page.dart';
 
 class ChatRoomListPage extends StatefulWidget {
   const ChatRoomListPage({Key? key}) : super(key: key);

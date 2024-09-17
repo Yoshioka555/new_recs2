@@ -1,14 +1,14 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:labmaidfastapi/chat/pdf_viewer.dart';
-import 'package:labmaidfastapi/domain/chat_data.dart';
-import 'package:labmaidfastapi/domain/user_data.dart';
+import 'package:new_labmaid/chat/pdf_viewer.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 
+import '../domain/chat_data.dart';
+import '../domain/user_data.dart';
 import '../pick_export/pick_image_export.dart';
 
 class PrivateChatPage extends StatefulWidget {

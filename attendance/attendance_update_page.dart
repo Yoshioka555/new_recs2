@@ -53,10 +53,12 @@ class _UpdateAttendancePageState extends State<UpdateAttendancePage> {
   }
 
   void reset() {
-    setState(() {
-      selectedStartDate = DateTime(currentDate.year,currentDate.month,currentDate.day,00,00,00);
-      selectedEndDate = DateTime(currentDate.year,currentDate.month,currentDate.day,23,00,00);
-    });
+    if(mounted) {
+      setState(() {
+        selectedStartDate = DateTime(currentDate.year,currentDate.month,currentDate.day,00,00,00);
+        selectedEndDate = DateTime(currentDate.year,currentDate.month,currentDate.day,23,00,00);
+      });
+    }
   }
 
   @override
@@ -211,9 +213,11 @@ class _UpdateAttendancePageState extends State<UpdateAttendancePage> {
                                       ),
                                     ],
                                     onChanged: (text) {
-                                      setState(() {
-                                        _titleController.text = text.toString();
-                                      });
+                                      if(mounted) {
+                                        setState(() {
+                                          _titleController.text = text.toString();
+                                        });
+                                      }
                                       reset();
                                     },
                                   ),
@@ -350,9 +354,11 @@ class _UpdateAttendancePageState extends State<UpdateAttendancePage> {
                                             trailing: CupertinoSwitch(
                                                 value: _mailSend,
                                                 onChanged: (value) {
-                                                  setState(() {
-                                                    _mailSend = value;
-                                                  });
+                                                  if(mounted) {
+                                                    setState(() {
+                                                      _mailSend = value;
+                                                    });
+                                                  }
                                                 }
                                             ),
                                           ),
@@ -548,12 +554,14 @@ class _UpdateAttendancePageState extends State<UpdateAttendancePage> {
 
                   // 「完了」を押したときの処理
                   onConfirm: (dateTime) {
-                    setState(() {
-                      selectedStartDate = dateTime;
-                      if (selectedStartDate.isAfter(selectedEndDate)) {
-                        selectedEndDate = selectedStartDate;
-                      }
-                    });
+                    if(mounted) {
+                      setState(() {
+                        selectedStartDate = dateTime;
+                        if (selectedStartDate.isAfter(selectedEndDate)) {
+                          selectedEndDate = selectedStartDate;
+                        }
+                      });
+                    }
                   },
 
                   // 「キャンセル」を押したときの処理
@@ -620,12 +628,14 @@ class _UpdateAttendancePageState extends State<UpdateAttendancePage> {
 
                         // 「完了」を押したときの処理
                         onConfirm: (dateTime) {
-                          setState(() {
-                            selectedStartDate = dateTime;
-                            if (selectedStartDate.isAfter(selectedEndDate)) {
-                              selectedEndDate = selectedStartDate;
-                            }
-                          });
+                          if(mounted) {
+                            setState(() {
+                              selectedStartDate = dateTime;
+                              if (selectedStartDate.isAfter(selectedEndDate)) {
+                                selectedEndDate = selectedStartDate;
+                              }
+                            });
+                          }
                         },
 
                         // 「キャンセル」を押したときの処理
@@ -648,9 +658,11 @@ class _UpdateAttendancePageState extends State<UpdateAttendancePage> {
                     Checkbox(
                         value: undecided,
                         onChanged: (value) {
-                          setState(() {
-                            undecided = value!;
-                          });
+                          if(mounted) {
+                            setState(() {
+                              undecided = value!;
+                            });
+                          }
                         }
                     ),
                     const Text(

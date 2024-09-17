@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
-import 'package:labmaidfastapi/domain/user_data.dart';
+import '../domain/user_data.dart';
+
 
 
 class AddMemoPage extends StatefulWidget {

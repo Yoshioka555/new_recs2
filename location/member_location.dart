@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:labmaidfastapi/header_footer_drawer/drawer.dart';
 
 import '../door_status/door_status_appbar.dart';
 import '../gemini/gemini_chat_page.dart';
+import '../header_footer_drawer/drawer.dart';
 
 //作成した研究室の地図UIです
 
@@ -59,7 +59,8 @@ class MemberLocation extends StatelessWidget {
                           color: Colors.white,
                           border: Border.all(color: Colors.black),
                         ),
-                        child: const Center(child: FittedBox(child: Text('プロジェクター'))),
+                        child: const Center(
+                            child: FittedBox(child: Text('プロジェクター'))),
                       ),
                     ),
                     // 流し

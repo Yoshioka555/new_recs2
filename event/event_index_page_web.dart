@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
-import 'package:labmaidfastapi/domain/event_data.dart';
-import 'package:labmaidfastapi/event/event_update_page.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:provider/provider.dart';
+import '../domain/event_data.dart';
 import 'event_index_model.dart';
+import 'event_update_page.dart';
 
-//変更点
 //新規作成
 //Web用に編集したカレンダーウィジェット
 

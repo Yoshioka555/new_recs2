@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'gemini_apikey.dart';
 
-//変更点
 //geminiディレクトリ内のファイルはGeminiAPIを試しに利用した時に作ったものです
 
 class GeminiPage extends StatefulWidget {

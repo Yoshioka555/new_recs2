@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:labmaidfastapi/chat/add_group_chat_member.dart';
-import 'package:labmaidfastapi/header_footer_drawer/footer.dart';
 import '../domain/chat_data.dart';
 import '../domain/user_data.dart';
 
 import 'package:http/http.dart' as http;
+
+import '../header_footer_drawer/footer.dart';
+import 'add_group_chat_member.dart';
 
 class ChatRoomInfo extends StatefulWidget {
   final GroupChatRoomData groupChatRoomData;

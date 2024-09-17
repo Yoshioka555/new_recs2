@@ -190,9 +190,11 @@ class _AttendanceIndexPageWeekState extends State<AttendanceIndexPageWeek> {
       if (!mounted) return; // ウィジェットがマウントされているか確認
       if (_isDisposed) return; // フラグをチェック
       var midDate = viewChangedDetails.visibleDates[viewChangedDetails.visibleDates.length ~/ 2];
-      setState(() {
-        _headerStyle = headerStyle(midDate);
-      });
+      if(mounted) {
+        setState(() {
+          _headerStyle = headerStyle(midDate);
+        });
+      }
     });
   }
 

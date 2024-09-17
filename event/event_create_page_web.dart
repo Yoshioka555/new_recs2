@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'event_create_model.dart';
 
-//変更点
 //新規作成
 //Web用にイベント追加ページを編集したもの
 
@@ -567,7 +566,9 @@ class _CreateEventPageWebState extends State<CreateEventPageWeb> {
                                       horizontal: 40,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xff6471e9),
+                                      //変更点
+                                      //色の統一
+                                      color: Colors.purple[200],
                                       borderRadius: BorderRadius.circular(7.0),
                                       boxShadow: const [
                                         BoxShadow(

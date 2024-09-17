@@ -4,17 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../user/email_reset_page.dart';
 import 'package:provider/provider.dart';
-
 import '../login/login_page.dart';
 import '../user/edit_user_page.dart';
 import 'drawer_model.dart';
 
+//変更点
+//自分だけの Dart & Flutter 公式キャラクター Dash を作れるサイトへの遷移を追加
+
 final Uri _homePageUrl = Uri.parse('https://al.kansai-u.ac.jp/');
 final Uri _poleManegeUrl = Uri.parse('https://p.al.kansai-u.ac.jp/');
+final Uri _dashPageUrl = Uri.parse('https://dashatar-dev.web.app/#/');
 
 class UserDrawer extends StatelessWidget {
   // 定数コンストラクタ
-  const UserDrawer({Key? key,}) : super(key: key);
+  const UserDrawer({
+    Key? key,
+  }) : super(key: key);
 
   // build()
   @override
@@ -22,70 +27,52 @@ class UserDrawer extends StatelessWidget {
     return ChangeNotifierProvider<DrawerModel>(
       create: (_) => DrawerModel()..fetchUserList(),
       child: Drawer(
-        backgroundColor: Colors.yellow,
         child: Consumer<DrawerModel>(builder: (context, model, child) {
           return ListView(
             children: [
               Container(
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage('assets/images/flutter_haikei.png'),
+                    image: AssetImage('assets/images/flutter_haikei.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     const Text(
                       'Menu & MyAccount',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 25,
-                      ),
+                      style: TextStyle(fontSize: 25),
                     ),
-                    const SizedBox(
-                      height: 7,
-                    ),
+                    const SizedBox(height: 7),
                     Text(
                       'UserName：${model.myData?.name}',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 18,
-                      ),
+                      style: const TextStyle(fontSize: 18),
                     ),
                     Text(
                       'Group：${model.myData?.group}',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 18,
-                      ),
+                      style: const TextStyle(fontSize: 18),
                     ),
                     Text(
                       'Grade：${model.myData?.grade}',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 18,
-                      ),
+                      style: const TextStyle(fontSize: 18),
                     ),
                     Text(
                       'Email：${model.myData?.email}',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 18,
-                      ),
+                      style: const TextStyle(fontSize: 18),
                     ),
                     Text(
                       '出席状況：${model.myData?.status}',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 18,
-                      ),
+                      style: const TextStyle(fontSize: 18),
                     ),
-                    const SizedBox(height: 15,
-                    ),
+                    const SizedBox(height: 15),
                   ],
                 ),
               ),
@@ -138,12 +125,18 @@ class UserDrawer extends StatelessWidget {
               ListTile(
                 leading: const Icon(Icons.home),
                 title: const Text('研究室ホームページ'),
-                onTap: () => _HomelaunchUrl(),
+                onTap: () => _HomeLaunchUrl(),
               ),
               ListTile(
                 leading: const Icon(Icons.poll),
                 title: const Text('Pole Manege'),
-                onTap: () => _PolelaunchUrl(),
+                onTap: () => _PoleLaunchUrl(),
+              ),
+              //変更点
+              ListTile(
+                leading: const Icon(Icons.flutter_dash_outlined),
+                title: const Text('Create Your Dash'),
+                onTap: () => _DashLaunchUrl(),
               ),
 
               const Divider(
@@ -164,35 +157,35 @@ class UserDrawer extends StatelessWidget {
                     showDialog(
                         context: context,
                         builder: (_) => CupertinoAlertDialog(
-                          title: const Text("ログアウトしますか？"),
-                          actions: [
-                            CupertinoDialogAction(
-                                isDestructiveAction: true,
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Cancel')),
-                            CupertinoDialogAction(
-                              child: const Text('OK'),
-                              onPressed: () {
-                                FirebaseAuth.instance.signOut();
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                      const LoginPage()),
+                              title: const Text("ログアウトしますか？"),
+                              actions: [
+                                CupertinoDialogAction(
+                                    isDestructiveAction: true,
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Cancel')),
+                                CupertinoDialogAction(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    FirebaseAuth.instance.signOut();
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const LoginPage()),
                                       (route) => false,
-                                );
-                                const snackBar = SnackBar(
-                                  backgroundColor: Colors.green,
-                                  content: Text('ログアウトしました'),
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              },
-                            )
-                          ],
-                        ));
+                                    );
+                                    const snackBar = SnackBar(
+                                      backgroundColor: Colors.green,
+                                      content: Text('ログアウトしました'),
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  },
+                                )
+                              ],
+                            ));
                   } catch (e) {
                     //失敗した場合
                     final snackBar = SnackBar(
@@ -209,21 +202,26 @@ class UserDrawer extends StatelessWidget {
       ),
     );
   }
-
-  //研究室ホームページ
-  Future<void> _HomelaunchUrl() async {
-    if (!await launchUrl(_homePageUrl)) {
-      throw Exception('Could not launch $_homePageUrl');
-    }
-  }
-
-//PoleManage
-  Future<void> _PolelaunchUrl() async {
-    if (!await launchUrl(_poleManegeUrl)) {
-      throw Exception('Could not launch $_poleManegeUrl');
-    }
-  }
-
 }
 
+//研究室ホームページ
+Future<void> _HomeLaunchUrl() async {
+  if (!await launchUrl(_homePageUrl)) {
+    throw Exception('Could not launch $_homePageUrl');
+  }
+}
 
+//PoleManage
+Future<void> _PoleLaunchUrl() async {
+  if (!await launchUrl(_poleManegeUrl)) {
+    throw Exception('Could not launch $_poleManegeUrl');
+  }
+}
+
+//変更点
+//自分だけの Dart & Flutter 公式キャラクター Dash を作れるサイト
+Future<void> _DashLaunchUrl() async {
+  if (!await launchUrl(_dashPageUrl)) {
+    throw Exception('Could not launch $_dashPageUrl');
+  }
+}

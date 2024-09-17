@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:labmaidfastapi/attendance/attendance_create_page.dart';
-import 'package:labmaidfastapi/attendance/attendance_index_page_day.dart';
-import 'package:labmaidfastapi/attendance/attendance_index_page_month.dart';
 
 import '../door_status/door_status_appbar.dart';
-import '../gemini/gemini_page.dart';
+import '../gemini/gemini_chat_page.dart';
 import '../header_footer_drawer/drawer.dart';
+import 'attendance_create_page.dart';
+import 'attendance_index_page_day.dart';
+import 'attendance_index_page_month.dart';
 import 'attendance_index_page_week.dart';
 import 'attendance_management_page.dart';
 
@@ -35,16 +35,16 @@ class _AttendanceHomePageState extends State<AttendanceHomePage> {
                 onPressed: () async {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const GeminiPage()),
+                    //変更点
+                    //GeminiPage()は削除しています
+                    //遷移先がGeminiPage()になっているものは、全てGeminiChatPage()に Replace in Files...しています
+                    MaterialPageRoute(builder: (context) => const GeminiChatPage()),
                   );
                 },
               ),
             ),
           ],
-          iconTheme: const IconThemeData(
-            color: Colors.white,
-          ),
-          backgroundColor: Colors.pink.shade200,
+          backgroundColor: Colors.blue[100],
           centerTitle: true,
           elevation: 0.0,
           title: const DoorStatusAppbar(),
@@ -59,8 +59,7 @@ class _AttendanceHomePageState extends State<AttendanceHomePage> {
         ),
         drawer: const UserDrawer(),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.amber
-          ,
+          backgroundColor: Colors.blue[200],
           onPressed: () async {
             //画面遷移
             await Navigator.push(
@@ -71,10 +70,7 @@ class _AttendanceHomePageState extends State<AttendanceHomePage> {
               ),
             );
           },
-          child: const Icon(
-            Icons.add,
-            color: Colors.black,
-          ),
+          child: const Icon(Icons.add),
         ),
         body: const TabBarView(
           children: [

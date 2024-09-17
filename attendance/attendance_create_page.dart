@@ -18,7 +18,6 @@ class CreateAttendancePage extends StatefulWidget {
 }
 
 class _CreateAttendancePageState extends State<CreateAttendancePage> {
-
   final GlobalKey<FormState> _form = GlobalKey();
 
   bool undecided = false;
@@ -36,8 +35,10 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
     _titleController = TextEditingController();
     _titleController.text = '遅刻';
     _descriptionController = TextEditingController();
-    selectedStartDate = DateTime(currentDate.year,currentDate.month,currentDate.day,00,00,00);
-    selectedEndDate = DateTime(currentDate.year,currentDate.month,currentDate.day,23,00,00);
+    selectedStartDate = DateTime(
+        currentDate.year, currentDate.month, currentDate.day, 00, 00, 00);
+    selectedEndDate = DateTime(
+        currentDate.year, currentDate.month, currentDate.day, 23, 00, 00);
     _descriptionNode = FocusNode();
     super.initState();
   }
@@ -49,10 +50,14 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
   }
 
   void reset() {
-    setState(() {
-      selectedStartDate = DateTime(currentDate.year,currentDate.month,currentDate.day,00,00,00);
-      selectedEndDate = DateTime(currentDate.year,currentDate.month,currentDate.day,23,00,00);
-    });
+    if (mounted) {
+      setState(() {
+        selectedStartDate = DateTime(
+            currentDate.year, currentDate.month, currentDate.day, 00, 00, 00);
+        selectedEndDate = DateTime(
+            currentDate.year, currentDate.month, currentDate.day, 23, 00, 00);
+      });
+    }
   }
 
   @override
@@ -62,25 +67,14 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.pink.shade200,
+          //変更点
+          //色の統一
+          backgroundColor: Colors.blue[100],
           centerTitle: false,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: Color(0xff626262),
-            ),
-          ),
-          title: const Text(
-            "Create New Attendance",
-            style: TextStyle(
-              color: Color(0xff626262),
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          //変更点
+          //戻るボタンを自動設定させる（ボタンの設置するコードを書かない）
+          //（通常デフォルトは「→」だが、下から画面遷移したのでアイコン未設定だと自動で「✖」になる）
+          title: const Text("Create New Attendance"),
         ),
         body: Consumer<CreateAttendanceModel>(builder: (context, model, child) {
           return Form(
@@ -114,7 +108,8 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  const Text('今日の日付：',
+                                  const Text(
+                                    '今日の日付：',
                                     style: TextStyle(
                                       fontSize: 17.0,
                                     ),
@@ -122,7 +117,8 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  Text(DateFormat.yMMMd('ja').format(currentDate),
+                                  Text(
+                                    DateFormat.yMMMd('ja').format(currentDate),
                                     style: const TextStyle(
                                       fontSize: 17.0,
                                     ),
@@ -148,7 +144,8 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  const Text('投稿者：',
+                                  const Text(
+                                    '投稿者：',
                                     style: TextStyle(
                                       fontSize: 17.0,
                                     ),
@@ -156,7 +153,8 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  Text(model.name,
+                                  Text(
+                                    model.name,
                                     style: const TextStyle(
                                       fontSize: 17.0,
                                     ),
@@ -182,7 +180,8 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  const Text('内容：',
+                                  const Text(
+                                    '内容：',
                                     style: TextStyle(
                                       fontSize: 17.0,
                                     ),
@@ -207,9 +206,12 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                                       ),
                                     ],
                                     onChanged: (text) {
-                                      setState(() {
-                                        _titleController.text = text.toString();
-                                      });
+                                      if (mounted) {
+                                        setState(() {
+                                          _titleController.text =
+                                              text.toString();
+                                        });
+                                      }
                                       reset();
                                     },
                                   ),
@@ -232,7 +234,8 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                               ),
                               keyboardType: TextInputType.multiline,
                               textInputAction: TextInputAction.newline,
-                              selectionControls: MaterialTextSelectionControls(),
+                              selectionControls:
+                                  MaterialTextSelectionControls(),
                               minLines: 1,
                               maxLines: 10,
                               maxLength: 1000,
@@ -336,7 +339,8 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                                         const SizedBox(
                                           width: 10,
                                         ),
-                                        const Text('メール送信：',
+                                        const Text(
+                                          'メール送信：',
                                           style: TextStyle(
                                             fontSize: 17.0,
                                           ),
@@ -346,11 +350,12 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                                             trailing: CupertinoSwitch(
                                                 value: _mailSend,
                                                 onChanged: (value) {
-                                                  setState(() {
-                                                    _mailSend = value;
-                                                  });
-                                                }
-                                            ),
+                                                  if (mounted) {
+                                                    setState(() {
+                                                      _mailSend = value;
+                                                    });
+                                                  }
+                                                }),
                                           ),
                                         ),
                                       ],
@@ -364,30 +369,43 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                             ),
                             GestureDetector(
                               onTap: () async {
-
                                 try {
                                   //イベント追加
-                                  await model.addAttendance(_titleController.text, selectedStartDate, selectedEndDate, _descriptionController.text, _mailSend, undecided);
+                                  await model.addAttendance(
+                                      _titleController.text,
+                                      selectedStartDate,
+                                      selectedEndDate,
+                                      _descriptionController.text,
+                                      _mailSend,
+                                      undecided);
                                   if (_mailSend == true) {
-                                    await model.sendEmail(_titleController.text, selectedStartDate, selectedEndDate, _descriptionController.text, undecided);
+                                    await model.sendEmail(
+                                        _titleController.text,
+                                        selectedStartDate,
+                                        selectedEndDate,
+                                        _descriptionController.text,
+                                        undecided);
                                   }
 
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const Footer(pageNumber: 1)),
+                                        builder: (context) =>
+                                            const Footer(pageNumber: 1)),
                                   );
                                   const snackBar = SnackBar(
                                     backgroundColor: Colors.green,
                                     content: Text('イベントの登録をしました。'),
                                   );
-                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
                                 } catch (e) {
                                   final snackBar = SnackBar(
                                     backgroundColor: Colors.red,
                                     content: Text(e.toString()),
                                   );
-                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
                                 }
                               },
                               child: Container(
@@ -396,7 +414,7 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                                   horizontal: 40,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xff6471e9),
+                                  color: Colors.blue[300],
                                   borderRadius: BorderRadius.circular(7.0),
                                   boxShadow: const [
                                     BoxShadow(
@@ -446,7 +464,8 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
             ),
             alignment: Alignment.centerLeft,
             child: TextButton(
-              child: Text('日付：${DateFormat.yMMMd('ja').format(selectedStartDate).toString()}(${DateFormat.E('ja').format(selectedStartDate)})',
+              child: Text(
+                '日付：${DateFormat.yMMMd('ja').format(selectedStartDate).toString()}(${DateFormat.E('ja').format(selectedStartDate)})',
                 style: const TextStyle(
                   fontSize: 17.0,
                 ),
@@ -457,26 +476,27 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                   // 現在の日時
                   currentTime: selectedStartDate,
                   // 選択できる日時の範囲
-                  minTime: DateTime(currentDate.year,currentDate.month,currentDate.day),
+                  minTime: DateTime(
+                      currentDate.year, currentDate.month, currentDate.day),
                   maxTime: DateTime(2030, 12, 31),
 
                   // ドラムロールを変化させたときの処理
-                  onChanged: (dateTime) {
-                  },
+                  onChanged: (dateTime) {},
 
                   // 「完了」を押したときの処理
                   onConfirm: (dateTime) {
-                    setState(() {
-                      selectedStartDate = dateTime;
-                      if (selectedStartDate.isAfter(selectedEndDate)) {
-                        selectedEndDate = selectedStartDate;
-                      }
-                    });
+                    if (mounted) {
+                      setState(() {
+                        selectedStartDate = dateTime;
+                        if (selectedStartDate.isAfter(selectedEndDate)) {
+                          selectedEndDate = selectedStartDate;
+                        }
+                      });
+                    }
                   },
 
                   // 「キャンセル」を押したときの処理
-                  onCancel: () {
-                  },
+                  onCancel: () {},
                   //言語
                   locale: LocaleType.jp,
                 );
@@ -491,72 +511,76 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
               Expanded(
                 child: undecided
                     ? Container(
-                  padding: const EdgeInsets.all(5.0),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 2,
-                      color: const Color(0xffb3b9ed),
-                    ),
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      '到着予定時刻未定(0:00)',
-                      style: TextStyle(
-                        fontSize: 17,
-                      ),
-                    ),
-                  ),
-                )
+                        padding: const EdgeInsets.all(5.0),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 2,
+                            color: const Color(0xffb3b9ed),
+                          ),
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            '到着予定時刻未定(0:00)',
+                            style: TextStyle(
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                      )
                     : Container(
-                  padding: const EdgeInsets.all(5.0),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 2,
-                      color: const Color(0xffb3b9ed),
-                    ),
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    child: Text('到着予定時刻：${DateFormat.Hm('ja').format(selectedStartDate)}',
-                      style: const TextStyle(
-                        fontSize: 17.0,
+                        padding: const EdgeInsets.all(5.0),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 2,
+                            color: const Color(0xffb3b9ed),
+                          ),
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        alignment: Alignment.centerLeft,
+                        child: TextButton(
+                          child: Text(
+                            '到着予定時刻：${DateFormat.Hm('ja').format(selectedStartDate)}',
+                            style: const TextStyle(
+                              fontSize: 17.0,
+                            ),
+                          ),
+                          onPressed: () {
+                            DatePicker.showTimePicker(
+                              context,
+                              // 現在の日時
+                              currentTime: selectedStartDate,
+
+                              // ドラムロールを変化させたときの処理
+                              onChanged: (dateTime) {},
+
+                              // 「完了」を押したときの処理
+                              onConfirm: (dateTime) {
+                                if (mounted) {
+                                  setState(() {
+                                    selectedStartDate = dateTime;
+                                    if (selectedStartDate
+                                        .isAfter(selectedEndDate)) {
+                                      selectedEndDate = selectedStartDate;
+                                    }
+                                  });
+                                }
+                              },
+
+                              // 「キャンセル」を押したときの処理
+                              onCancel: () {},
+                              //言語
+                              locale: LocaleType.jp,
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      DatePicker.showTimePicker(
-                        context,
-                        // 現在の日時
-                        currentTime: selectedStartDate,
-
-                        // ドラムロールを変化させたときの処理
-                        onChanged: (dateTime) {
-                        },
-
-                        // 「完了」を押したときの処理
-                        onConfirm: (dateTime) {
-                          setState(() {
-                            selectedStartDate = dateTime;
-                            if (selectedStartDate.isAfter(selectedEndDate)) {
-                              selectedEndDate = selectedStartDate;
-                            }
-                          });
-                        },
-
-                        // 「キャンセル」を押したときの処理
-                        onCancel: () {
-                        },
-                        //言語
-                        locale: LocaleType.jp,
-                      );
-                    },
-                  ),
-                ),
               ),
-              const SizedBox(width: 10,),
+              const SizedBox(
+                width: 10,
+              ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.3,
                 child: Row(
@@ -566,15 +590,17 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                     Checkbox(
                         value: undecided,
                         onChanged: (value) {
-                          setState(() {
-                            undecided = value!;
-
-                          });
-                        }
-                    ),
+                          if (mounted) {
+                            setState(() {
+                              undecided = value!;
+                            });
+                          }
+                        }),
                     const Text(
                       '未定',
-                      style: TextStyle(fontSize: 17,),
+                      style: TextStyle(
+                        fontSize: 17,
+                      ),
                     ),
                   ],
                 ),
@@ -598,7 +624,8 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
             ),
             alignment: Alignment.centerLeft,
             child: TextButton(
-              child: Text('日付：${DateFormat.yMMMd('ja').format(selectedStartDate).toString()}(${DateFormat.E('ja').format(selectedStartDate)})',
+              child: Text(
+                '日付：${DateFormat.yMMMd('ja').format(selectedStartDate).toString()}(${DateFormat.E('ja').format(selectedStartDate)})',
                 style: const TextStyle(
                   fontSize: 17.0,
                 ),
@@ -609,26 +636,27 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                   // 現在の日時
                   currentTime: selectedStartDate,
                   // 選択できる日時の範囲
-                  minTime: DateTime(currentDate.year,currentDate.month,currentDate.day),
+                  minTime: DateTime(
+                      currentDate.year, currentDate.month, currentDate.day),
                   maxTime: DateTime(2030, 12, 31),
 
                   // ドラムロールを変化させたときの処理
-                  onChanged: (dateTime) {
-                  },
+                  onChanged: (dateTime) {},
 
                   // 「完了」を押したときの処理
                   onConfirm: (dateTime) {
-                    setState(() {
-                      selectedStartDate = dateTime;
-                      if (selectedStartDate.isAfter(selectedEndDate)) {
-                        selectedEndDate = selectedStartDate;
-                      }
-                    });
+                    if (mounted) {
+                      setState(() {
+                        selectedStartDate = dateTime;
+                        if (selectedStartDate.isAfter(selectedEndDate)) {
+                          selectedEndDate = selectedStartDate;
+                        }
+                      });
+                    }
                   },
 
                   // 「キャンセル」を押したときの処理
-                  onCancel: () {
-                  },
+                  onCancel: () {},
                   //言語
                   locale: LocaleType.jp,
                 );
@@ -650,7 +678,8 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
             ),
             alignment: Alignment.centerLeft,
             child: TextButton(
-              child: Text('早退予定時刻：${DateFormat.Hm('ja').format(selectedStartDate)}',
+              child: Text(
+                '早退予定時刻：${DateFormat.Hm('ja').format(selectedStartDate)}',
                 style: const TextStyle(
                   fontSize: 17.0,
                 ),
@@ -663,22 +692,22 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                   // 選択できる日時の範囲
 
                   // ドラムロールを変化させたときの処理
-                  onChanged: (dateTime) {
-                  },
+                  onChanged: (dateTime) {},
 
                   // 「完了」を押したときの処理
                   onConfirm: (dateTime) {
-                    setState(() {
-                      selectedStartDate = dateTime;
-                      if (selectedStartDate.isAfter(selectedEndDate)) {
-                        selectedEndDate = selectedStartDate;
-                      }
-                    });
+                    if(mounted) {
+                      setState(() {
+                        selectedStartDate = dateTime;
+                        if (selectedStartDate.isAfter(selectedEndDate)) {
+                          selectedEndDate = selectedStartDate;
+                        }
+                      });
+                    }
                   },
 
                   // 「キャンセル」を押したときの処理
-                  onCancel: () {
-                  },
+                  onCancel: () {},
                   //言語
                   locale: LocaleType.jp,
                 );
@@ -702,7 +731,8 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
             ),
             alignment: Alignment.centerLeft,
             child: TextButton(
-              child: Text('開始時刻：${DateFormat.yMMMd('ja').format(selectedStartDate).toString()}(${DateFormat.E('ja').format(selectedStartDate)})ー${DateFormat.Hm('ja').format(selectedStartDate)}',
+              child: Text(
+                '開始時刻：${DateFormat.yMMMd('ja').format(selectedStartDate).toString()}(${DateFormat.E('ja').format(selectedStartDate)})ー${DateFormat.Hm('ja').format(selectedStartDate)}',
                 style: const TextStyle(
                   fontSize: 17.0,
                 ),
@@ -713,26 +743,27 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                   // 現在の日時
                   currentTime: selectedStartDate,
                   // 選択できる日時の範囲
-                  minTime: DateTime(currentDate.year,currentDate.month,currentDate.day,0,0,0),
-                  maxTime: DateTime(2030, 12, 31,23,0,0),
+                  minTime: DateTime(currentDate.year, currentDate.month,
+                      currentDate.day, 0, 0, 0),
+                  maxTime: DateTime(2030, 12, 31, 23, 0, 0),
 
                   // ドラムロールを変化させたときの処理
-                  onChanged: (dateTime) {
-                  },
+                  onChanged: (dateTime) {},
 
                   // 「完了」を押したときの処理
                   onConfirm: (dateTime) {
-                    setState(() {
-                      selectedStartDate = dateTime;
-                      if (selectedStartDate.isAfter(selectedEndDate)) {
-                        selectedEndDate = selectedStartDate;
-                      }
-                    });
+                    if(mounted) {
+                      setState(() {
+                        selectedStartDate = dateTime;
+                        if (selectedStartDate.isAfter(selectedEndDate)) {
+                          selectedEndDate = selectedStartDate;
+                        }
+                      });
+                    }
                   },
 
                   // 「キャンセル」を押したときの処理
-                  onCancel: () {
-                  },
+                  onCancel: () {},
                   //言語
                   locale: LocaleType.jp,
                 );
@@ -754,7 +785,8 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
             ),
             alignment: Alignment.centerLeft,
             child: TextButton(
-              child: Text('終了時刻：${DateFormat.yMMMd('ja').format(selectedEndDate).toString()}(${DateFormat.E('ja').format(selectedEndDate)})ー${DateFormat.Hm('ja').format(selectedEndDate)}',
+              child: Text(
+                '終了時刻：${DateFormat.yMMMd('ja').format(selectedEndDate).toString()}(${DateFormat.E('ja').format(selectedEndDate)})ー${DateFormat.Hm('ja').format(selectedEndDate)}',
                 style: const TextStyle(
                   fontSize: 17.0,
                 ),
@@ -769,19 +801,19 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
                   maxTime: DateTime(2030, 12, 31),
 
                   // ドラムロールを変化させたときの処理
-                  onChanged: (dateTime) {
-                  },
+                  onChanged: (dateTime) {},
 
                   // 「完了」を押したときの処理
                   onConfirm: (dateTime) {
-                    setState(() {
-                      selectedEndDate = dateTime;
-                    });
+                    if(mounted) {
+                      setState(() {
+                        selectedEndDate = dateTime;
+                      });
+                    }
                   },
 
                   // 「キャンセル」を押したときの処理
-                  onCancel: () {
-                  },
+                  onCancel: () {},
                   //言語
                   locale: LocaleType.jp,
                 );
@@ -793,5 +825,3 @@ class _CreateAttendancePageState extends State<CreateAttendancePage> {
     }
   }
 }
-
-

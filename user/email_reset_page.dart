@@ -73,9 +73,11 @@ class _EmailResetPageState extends State<EmailResetPage> {
                                   icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility),
 
                                   onPressed: () {
-                                    setState(() {
-                                      _isObscure = !_isObscure;
-                                    });
+                                    if(mounted){
+                                      setState(() {
+                                        _isObscure = !_isObscure;
+                                      });
+                                    }
                                   },
                                 )
                             ),

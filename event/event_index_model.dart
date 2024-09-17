@@ -3,7 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:labmaidfastapi/domain/event_data.dart';
+
+import '../domain/event_data.dart';
 
 class EventIndexModel extends ChangeNotifier {
 

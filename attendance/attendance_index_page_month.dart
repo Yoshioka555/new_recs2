@@ -199,9 +199,11 @@ class _AttendanceIndexPageMonthState extends State<AttendanceIndexPageMonth> {
       if (!mounted) return; // ウィジェットがマウントされているか確認
       if (_isDisposed) return; // フラグをチェック
       var midDate = viewChangedDetails.visibleDates[viewChangedDetails.visibleDates.length ~/ 2];
-      setState(() {
-        _headerStyle = headerStyle(midDate);
-      });
+      if(mounted) {
+        setState(() {
+          _headerStyle = headerStyle(midDate);
+        });
+      }
     });
   }
 
@@ -283,9 +285,11 @@ class _AttendanceIndexPageMonthState extends State<AttendanceIndexPageMonth> {
                                 ),
                               ],
                               onChanged: (text) {
-                                setState(() {
-                                  selectedYear = text!;
-                                });
+                                if(mounted) {
+                                  setState(() {
+                                    selectedYear = text!;
+                                  });
+                                }
                               }
                           ),
                         ),
@@ -346,9 +350,11 @@ class _AttendanceIndexPageMonthState extends State<AttendanceIndexPageMonth> {
                                 ),
                               ],
                               onChanged: (text) {
-                                setState(() {
-                                  selectedMonth = text!;
-                                });
+                                if(mounted) {
+                                  setState(() {
+                                    selectedMonth = text!;
+                                  });
+                                }
                               }
                           ),
                         ),
@@ -551,9 +557,11 @@ class _AttendanceIndexPageMonthState extends State<AttendanceIndexPageMonth> {
                             ),
                           ],
                           onChanged: (text) {
-                            setState(() {
-                              selectedYear = text!;
-                            });
+                            if(mounted) {
+                              setState(() {
+                                selectedYear = text!;
+                              });
+                            }
                           }
                       ),
                     ),
@@ -614,9 +622,11 @@ class _AttendanceIndexPageMonthState extends State<AttendanceIndexPageMonth> {
                             ),
                           ],
                           onChanged: (text) {
-                            setState(() {
-                              selectedMonth = text!;
-                            });
+                            if(mounted) {
+                              setState(() {
+                                selectedMonth = text!;
+                              });
+                            }
                           }
                       ),
                     ),

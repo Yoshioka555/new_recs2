@@ -4,8 +4,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:labmaidfastapi/domain/user_data.dart';
 import 'package:http/http.dart' as http;
+
+import '../domain/user_data.dart';
 
 class AddChatRoomModel extends ChangeNotifier {
   final roomNameController = TextEditingController();

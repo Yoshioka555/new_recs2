@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:labmaidfastapi/chat/chatroom_index_page.dart';
-import 'package:labmaidfastapi/location/member_location.dart';
-import 'package:labmaidfastapi/minutes/minutes_index_page.dart';
 
 import '../attendance/attendance_page_responsive.dart';
+import '../chat/chatroom_index_page.dart';
 import '../event/event_responsive_page.dart';
+import '../location/member_location.dart';
+import '../minutes/minutes_index_page.dart';
 import '../user/my_page.dart';
 
 class Footer extends StatefulWidget {
@@ -42,8 +42,10 @@ class _FooterState extends State<Footer> {
 
   //アイコンや文字列のカラー
   final List<Color?> _footerItemColor = [
-    Colors.purple[200],
-    Colors.pink.shade200,
+    //変更点
+    //色の統一
+    Colors.purple[300],
+    Colors.blue[300],
     Colors.orange,
     Colors.blue.shade800,
     Colors.teal,
@@ -97,11 +99,14 @@ class _FooterState extends State<Footer> {
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _bottomNavigationBarItems[_selectedIndex] = _UpdateDeactiveState(_selectedIndex);
-      _bottomNavigationBarItems[index] = _UpdateActiveState(index);
-      _selectedIndex = index;
-    });
+    //変更点
+    if(mounted){
+      setState(() {
+        _bottomNavigationBarItems[_selectedIndex] = _UpdateDeactiveState(_selectedIndex);
+        _bottomNavigationBarItems[index] = _UpdateActiveState(index);
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override

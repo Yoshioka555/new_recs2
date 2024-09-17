@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:labmaidfastapi/attendance/attendance_home_page_web.dart';
-import 'package:labmaidfastapi/attendance/attendance_management_page_web.dart';
-import 'package:labmaidfastapi/door_status/door_status_appbar.dart';
-import '../gemini/gemini_page.dart';
+import 'package:new_labmaid/gemini/gemini_chat_page.dart';
+import '../door_status/door_status_appbar.dart';
 import '../header_footer_drawer/drawer.dart';
 import 'attendance_create_page_web.dart';
+import 'attendance_home_page_web.dart';
+import 'attendance_management_page_web.dart';
 
-//変更点
 //新規作成
 //WEB用の出席管理ページ
 
@@ -19,10 +18,9 @@ class AttendancePageWeb extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.pink.shade200,
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
+        //変更点
+        //backgroundColor色の統一
+        backgroundColor: Colors.blue[100],
         centerTitle: false,
         title: const DoorStatusAppbar(),
         //Gemini AI Page への遷移
@@ -35,7 +33,7 @@ class AttendancePageWeb extends StatelessWidget {
               onPressed: () async {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const GeminiPage()),
+                  MaterialPageRoute(builder: (context) => const GeminiChatPage()),
                 );
               },
             ),

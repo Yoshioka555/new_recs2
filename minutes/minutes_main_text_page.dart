@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:new_labmaid/minutes/voice_minutes/voice_minutes_page.dart';
 import '../domain/memo_data.dart';
 import 'package:http/http.dart' as http;
 
@@ -55,6 +56,23 @@ class _MainTextPageState extends State<MainTextPage> {
             ),
           ),
           actions: [
+            //変更点
+            //議事録の録音ページに遷移
+            IconButton(
+              icon: const Icon(Icons.mic),
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const VoiceMemoPage()),
+                );
+                setState(() {
+                  _mainTextController.text += minutesText;
+                });
+                await updateMainText();
+                //await VoiceMemoPage();
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.save),
               onPressed: () async {
@@ -75,7 +93,6 @@ class _MainTextPageState extends State<MainTextPage> {
               keyboardType: TextInputType.multiline,
               maxLines: 40,
               controller: _mainTextController,
-
             ),
           ),
           const SizedBox(height: 50), // 下部に50ピクセルの空白を追加

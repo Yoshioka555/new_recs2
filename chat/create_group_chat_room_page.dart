@@ -2,10 +2,10 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:labmaidfastapi/header_footer_drawer/footer.dart';
 import 'package:provider/provider.dart';
 
 import '../domain/user_data.dart';
+import '../header_footer_drawer/footer.dart';
 import '../pick_export/pick_image_export.dart';
 import 'create_group_chat_room_model.dart';
 

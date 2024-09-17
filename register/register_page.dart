@@ -8,17 +8,17 @@ import 'register_model.dart';
 import 'dart:typed_data';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key:key);
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-
   bool _isObscure = true;
 
   String _group = '';
+
   //エラーを表示
   String? error;
   String _grade = 'B4';
@@ -26,13 +26,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Uint8List? imageData;
 
-  void _handleRadioButton(String group) =>
-      setState(() {
+  void _handleRadioButton(String group) => setState(() {
         _group = group;
       });
 
-  void _handleDropdownButton(String grade) =>
-      setState(() {
+  void _handleDropdownButton(String grade) => setState(() {
         _grade = grade;
         _gradeDisplay = grade;
       });
@@ -42,15 +40,18 @@ class _RegisterPageState extends State<RegisterPage> {
     return ChangeNotifierProvider<RegisterModel>(
       create: (_) => RegisterModel(),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        //変更点
+        //背景色設定を消しています
         appBar: AppBar(
-          title: const Text(
-            '新規登録',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          backgroundColor: Colors.black,
+          //変更点
+          //マテリアルデザイン３を適応しているので、基本的には色を指定しなければ現代的なデザインに見えるようになっています
+          //周りの色に合わせて色が自動設定されるイメージです
+          //backgroundColorの黒指定と、文字カラーの白指定を消しています
+          title: const Text('新規登録'),
+          //変更点
+          //戻るボタンを自動設定させる
+          //（通常デフォルトは「→」だが、下から画面遷移したのでアイコン未設定だと自動で「✖」になる）
+          /*
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
@@ -58,6 +59,7 @@ class _RegisterPageState extends State<RegisterPage> {
               },
               color: Colors.white,
           ),
+          */
         ),
         body: Consumer<RegisterModel>(builder: (context, model, child) {
           return Stack(
@@ -70,9 +72,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       Container(
                         padding: const EdgeInsets.all(10),
                         alignment: Alignment.center,
-                        decoration: const BoxDecoration(
-                            color: Colors.white
-                        ),
+                        decoration: const BoxDecoration(color: Colors.white),
                         child: GestureDetector(
                           onTap: () async {
                             //getImageFromGallery();
@@ -84,7 +84,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: CircleAvatar(
                             backgroundColor: Colors.grey,
                             radius: 50,
-                            backgroundImage: imageData != null ? Image.memory(imageData!).image : const AssetImage('assets/images/default.png'),
+                            backgroundImage: imageData != null
+                                ? Image.memory(imageData!).image
+                                : const AssetImage('assets/images/default.png'),
                           ),
                         ),
                       ),
@@ -96,9 +98,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: TextField(
                             controller: model.emailController,
                             decoration: const InputDecoration(
-                                labelText: 'New Email　　※必要',
-                                //メールのアイコン
-                                icon: Icon(Icons.mail),
+                              labelText: 'New Email　　※必要',
+                              //メールのアイコン
+                              icon: Icon(Icons.mail),
                             ),
                             onChanged: (text) {
                               model.setEmail(text);
@@ -122,7 +124,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               labelText: 'New Password　　※必要',
                               //鍵のアイコン
                               icon: Icon(Icons.lock),
-
                             ),
                             onChanged: (text) {
                               model.setPassword(text);
@@ -148,14 +149,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                 //鍵のアイコン
                                 icon: const Icon(Icons.lock),
                                 suffixIcon: IconButton(
-                                  icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility),
+                                  icon: Icon(_isObscure
+                                      ? Icons.visibility_off
+                                      : Icons.visibility),
                                   onPressed: () {
                                     setState(() {
                                       _isObscure = !_isObscure;
                                     });
                                   },
-                                )
-                            ),
+                                )),
                             onChanged: (text) {
                               model.setPassConfirm(text);
                             },
@@ -310,8 +312,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             _handleDropdownButton(text!);
                             model.gradeController.text = _grade;
                             model.setGrade(_grade);
-                          }
-                      ),
+                          }),
                       const SizedBox(
                         height: 16,
                       ),
@@ -334,34 +335,33 @@ class _RegisterPageState extends State<RegisterPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                      const Footer(pageNumber: 0)),
-                                      (route) => false,
+                                          const Footer(pageNumber: 0)),
+                                  (route) => false,
                                 );
                               } on FirebaseAuthException catch (e) {
                                 //ユーザー登録に失敗した場合
                                 if (e.code == 'weak-password') {
                                   error = 'パスワードが弱いです。６文字以上を入力してください。';
-                                }
-                                else if (e.code == 'email-already-in-use') {
+                                } else if (e.code == 'email-already-in-use') {
                                   error = 'すでに利用されているメールアドレス';
-                                }
-                                else if (e.code == 'invalid-email') {
+                                } else if (e.code == 'invalid-email') {
                                   error = 'メールアドレスの形をしていません。';
-                                }
-                                else {
+                                } else {
                                   error = 'アカウント作成エラー';
                                 }
                                 final snackBar = SnackBar(
                                   backgroundColor: Colors.red,
                                   content: Text(error.toString()),
                                 );
-                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
                               } catch (e) {
                                 final snackBar = SnackBar(
                                   backgroundColor: Colors.red,
                                   content: Text(e.toString()),
                                 );
-                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
                               } finally {
                                 model.endLoading();
                               }

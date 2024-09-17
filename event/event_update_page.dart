@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:intl/intl.dart';
-import 'package:labmaidfastapi/domain/event_data.dart';
 import 'package:provider/provider.dart';
 
+import '../domain/event_data.dart';
 import 'event_update_model.dart';
 
 class UpdateEventPage extends StatefulWidget {

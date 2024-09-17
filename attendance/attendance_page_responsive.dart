@@ -3,7 +3,6 @@ import '../widget/responsive_widget.dart';
 import 'attendance_home_page.dart';
 import 'attendance_page_web.dart';
 
-//変更点
 //新規作成
 //出席管理ページのレスポンシブ
 

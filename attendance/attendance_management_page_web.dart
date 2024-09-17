@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import 'attendance_management_model.dart';
 
-//変更点
 //新規作成
 //web用のページで右側に表示させる出席状況表示ウィジェット
 

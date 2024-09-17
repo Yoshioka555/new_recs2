@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:labmaidfastapi/header_footer_drawer/footer.dart';
-import 'package:labmaidfastapi/minutes/minutes_edit_page.dart';
-import 'package:labmaidfastapi/minutes/minutes_main_text_page.dart';
 
 import '../domain/memo_data.dart';
+import '../header_footer_drawer/footer.dart';
+import 'minutes_edit_page.dart';
+import 'minutes_main_text_page.dart';
 
 class MemoListShow extends StatefulWidget {
   final List<MemoData> memoList;

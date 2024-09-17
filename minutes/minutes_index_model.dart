@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:labmaidfastapi/domain/user_data.dart';
 import '../domain/memo_data.dart';
+import '../domain/user_data.dart';
 
 
 class MemoListModel extends ChangeNotifier {
